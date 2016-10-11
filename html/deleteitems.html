@@ -1,0 +1,25 @@
+<html>
+<head>
+  <title>Feed App: Delete Item</title>
+  <link type="text/css" rel="stylesheet" href="/css/index.css"/>
+  <link href='/static/rss.png' rel='icon'/>
+</head>
+<body>
+
+<div id="header">
+ <div class="left">Feed App: Delete Item</div>
+</div>
+
+<p>Let's expand your feeds!</p>
+<form method="POST" action="/admin/deleteitems">
+Delete this id: <input type="text" name="id" value=""/><br/>
+</form>
+
+<form method="POST" action="/admin/deleteitems">
+Or make a tombstone with this guid: <input type="text" name="guid" value=""/> on feed <input type="text" name="feed_name" value=""/> <input type="submit">
+</form>
+
+{{message}}
+
+</body>
+</html>

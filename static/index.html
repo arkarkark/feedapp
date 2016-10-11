@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html ng-app="feedapp">
+<head>
+  <title>Feed App</title>
+  <meta name="ROBOTS" content="NOINDEX,NOFOLLOW" />
+  <link type="text/css" rel="stylesheet" href="/static/index.css"/>
+  <link href="/static/rss.png" rel="icon"/>
+  <meta name="google-site-verification" content="N6ApU5tOk1hckZrZpviKWpc92cr96VERgaMTqpFPeYk" />
+  <script src="/js/angular.min.js"></script>
+  <script src="/js/angular-resource.min.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/header.js"></script>
+  <script src="/js/expand.js"></script>
+  <script src="/js/blogger.js"></script>
+  <script src="/js/mail.js"></script>
+  <script src="/js/util.js"></script>
+</head>
+<body>
+
+<div ng-controller="HeaderCtrl" id="header">
+  <div class="left"><a href="#/">Feed App</a></div>
+  <div class="right">
+    <span ng-show="user.username">
+      <span ng-bind="user.username"></span>
+      <a ng-href="{{user.logoutUrl}}">Logout</a>
+    </span>
+    <a ng-hide="user.username" ng-href="{{ user.loginUrl }}">Login</a>
+  </div>
+</div>
+</div>
+
+<div ng-view></div>
+
+</body>
+</html>

@@ -1,0 +1,64 @@
+<html>
+<head>
+  <title>Feed App - Blogger private feeds</title>
+  <link type="text/css" rel="stylesheet" href="/css/index.css"/>
+  <link href='/static/rss.png' rel='icon'/>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <meta name="google-site-verification" content="N6ApU5tOk1hckZrZpviKWpc92cr96VERgaMTqpFPeYk" />
+</head>
+<body>
+
+{% if logged %}
+
+<div id="header">
+  <div class="right"><a href="/oauth/revoke_token">logout</a></div>
+  <div class="left">Blogger private feeds</div>
+  <div id="status" class="hidden"><span class="text">blah blah</span></div>
+</div>
+
+<p>Your blogs:</p>
+{% for blog in blogs %}
+  <div class="blog">
+    <div class="left">
+      <span class="title">
+        <a href="{{blog.link}}">{{ blog.title }}</a>
+      </span><br/>
+      <span class="date">created: {{ blog.published }}</span><br/>
+      <span class="date">last updated: {{ blog.updated }}</span>
+    </div>
+    <div class="right post-editor-wrapper">
+     <a href="#" class="new-post-link">{{ blog.feed_description }}</a>
+    <div class="hidden post-editor">
+<form>
+<input type="hidden" name="blog_id" value="{{ blog.id }}"/>
+Name:
+<input type="text" name="name" value="{{ blog.feed_name }}"/><br/>
+Tombstone posts older than this many days old:
+<input type="text" name="feed_tombstone_days_older"
+       value="{{ blog.feed_tombstone_days_older }}"/><br/>
+Keep This many Posts:
+<input type="text" name="feed_keep_first"
+       value="{{ blog.feed_keep_first }}"/><br/>
+
+<input type="button" name="submit" value="{{ blog.feed_button }}"
+       onClick="submitForm(this.form)" />
+</form>
+      </div>
+    </div>
+  </div>
+  <div class="clear"></div>
+{% endfor %}
+
+{% else %}
+
+I could do automatic redirect but we all love welcome screens :). <br/>
+
+Ok, <a href="{{ access_url }}">allow this app to access Blogger</a>.
+
+Tah dah!
+
+{% endif %}
+
+</body>
+</html>

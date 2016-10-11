@@ -1,0 +1,5 @@
+*.pyc
+oauth_settings.py
+gdata-python-client
+atom
+gdata

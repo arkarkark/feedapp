@@ -1,0 +1,132 @@
+
+<table>
+  <tr>
+    <td>Name:</td>
+    <td width="700"><input type="text" ng-model="expand.name"/></td>
+  </tr>
+  <tr>
+    <td>Url:</td>
+    <td colspan=2><input class="wide" type="text" ng-model="expand.url"/></td>
+  </tr>
+  <tr ng-show="false">
+    <td>Type:</td>
+    <td colspan=2>
+      <select ng-model="expand.feed_type"
+              ng-options="type.value as type.name for type in feed_types">
+    </select></td>
+  </tr>
+  <tbody ng-show="expand.feed_type == 1 || expand.feed_type == 2">
+  <tr>
+    <td>HTML begin:</td>
+    <td><input class="wide" type="text" ng-model="expand.html_begin_str"/></td>
+    <td>
+      <label>
+        <input type="checkbox" ng-model="expand.html_include_begin"/> Include
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <td>HTML End:</td>
+    <td><input class="wide" type="text" ng-model="expand.html_end_str"/></td>
+    <td>
+      <label>
+        <input type="checkbox" ng-model="expand.html_include_end"/> Include
+      </label>
+    </td>
+  </tr>
+  </tbody>
+  <tbody ng-show="expand.feed_type == 1">
+  <tr>
+    <td>Guid Pattern:</td>
+    <td colspan=2>
+      <input class="wide" type="text" ng-model="expand.html_page_guid_re"/>
+    </td>
+  </tr>
+  </tbody>
+  <tr>
+    <td title="This line marks the start of the article">Begin:</td>
+    <td><input class="wide" type="text" ng-model="expand.begin_str"/></td>
+    <td>
+      <label title="Include the line containg this string in the article.">
+        <input type="checkbox" ng-model="expand.include_begin"/> Include
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <td>End:</td>
+    <td><input class="wide" type="text" ng-model="expand.end_str"/></td>
+    <td>
+      <label>
+        <input type="checkbox" ng-model="expand.include_end"/> Include
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top"
+        title="One regex per line. Format is: ^search^replace^">Replace:</td>
+    <td colspan=2>
+      <textarea rows=4 class="wide" ng-model="expand.replace"></textarea>
+    </td>
+  </tr>
+<!--
+  # replace
+  # feedreplace
+  # itemreplace
+  # fetchcommand
+  # encoding
+  # interval
+  # url_replace
+-->
+  <tr>
+    <td>Options:</td>
+    <td>
+      <label>
+        <input type="checkbox" ng-model="expand.absolute_urls"/> Absolute Urls
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+      <label>
+        <input type="checkbox" ng-model="expand.title_deduping"/> Dedup Titles
+      </label>
+    </td>
+  </tr>
+  <tr>
+    <td></td>
+    <td>
+      <label>
+        <input type="checkbox" ng-model="expand.proxy_images"/> Proxy Images
+      </label>
+    </td>
+  </tr>
+</table>
+
+<button ng-click="update()">save</button>
+<button ng-click="remove()">remove</button>
+<button ng-click="cancel()">cancel</button>
+<span class="gap">&nbsp;</span>
+<button ng-click="importExport()">import/export</button>
+<button ng-click="clearItems()">clear all items ***</button>
+
+<hr />
+
+  <div ng-hide="items.length">No Items to display. Load the feed first?</div>
+<table ng-show="items.length">
+  <tr>
+    <td style="vertical-align:text-top;
+white-space: nowrap; overflow: hidden; max-width: 200px;">
+      <div ng-repeat="item in items">
+        <a title="{{item.title}}" ng-click="selectItem(item.id)">{{item.title}}</a>
+      </div>
+    </td>
+    <td style="vertical-align:text-top;">
+      <div ng-hide="item">&lt;-Click an item title on the left.</div>
+      <div>
+        <button ng-show="item" ng-click="refreshItem()">Refresh</button>
+        <button ng-show="item" ng-click="keepItem()">Keep this version ***</button>
+      </div>
+      <div ng-bind-html-unsafe="item.cleanBody"></div></td>
+  </tr>
+</table>

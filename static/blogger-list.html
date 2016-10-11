@@ -1,0 +1,17 @@
+Bloggers!
+
+<table>
+  <tr>
+    <th><p>Your blogs:</th>
+    <th>Url</th>
+    <th></th>
+    <td><a href="/#/blogger/edit/new">Add...</a></th></td>
+  </tr>
+
+ <tr ng-repeat="blog in blogs">
+    <td>{{blog.title}}</td>
+    <td>{{blog.link}}</td>
+    <td><a ng-show="blog.name" ng-href="/feed/{{blog.name}}">feed</a></td>
+    <td><a ng-href="/#/blogger/edit/{{blog.blog_id}}">{{blog.feed_button}}</a></th></td>
+  </tr>
+</table>

@@ -1,0 +1,34 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+builtins:
+- appstats: on
+
+inbound_services:
+- mail
+
+handlers:
+- url: /js
+  static_dir: js
+  login: admin
+
+- url: /static
+  static_dir: static
+  login: admin
+
+- url: /
+  static_files: static/index.html
+  upload: static/index.html
+  login: admin
+
+- url: /favicon.ico
+  static_files: static/rss.png
+  upload: static/rss.png
+
+- url: /.*
+  script: main.app
+
+- url: /_ah/mail/.+
+  script: main.app
+  login: admin

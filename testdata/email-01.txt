@@ -1,0 +1,102 @@
+Delivered-To: ark@example.com
+Received: by 10.216.80.193 with SMTP id k43cs183386wee;
+        Sun, 16 Jan 2011 19:13:35 -0800 (PST)
+Received: by 10.42.217.73 with SMTP id hl9mr3842661icb.45.1295234014606;
+        Sun, 16 Jan 2011 19:13:34 -0800 (PST)
+Return-Path: <bikes+bncCJeZrLe3EhDY587pBBoE0gGnCg@googlegroups.com>
+Received: from shut (204.11.224.149.static.etheric.net [204.11.224.149])
+        by mx.google.com with ESMTP id w3si10010937ico.41.2011.01.16.19.13.33;
+        Sun, 16 Jan 2011 19:13:33 -0800 (PST)
+Received-SPF: neutral (google.com: 204.11.224.149 is neither permitted nor denied by domain of bikes+bncCJeZrLe3EhDY587pBBoE0gGnCg@googlegroups.com) client-ip=204.11.224.149;
+Authentication-Results: mx.google.com; spf=neutral (google.com: 204.11.224.149 is neither permitted nor denied by domain of bikes+bncCJeZrLe3EhDY587pBBoE0gGnCg@googlegroups.com) smtp.mail=bikes+bncCJeZrLe3EhDY587pBBoE0gGnCg@googlegroups.com; dkim=pass (test mode) header.i=@googlegroups.com
+Received: by shut (Postfix)
+	id 558F020814; Sun, 16 Jan 2011 19:13:32 -0800 (PST)
+Delivered-To: ark@example.com
+Received: from mail-yx0-f188.google.com (mail-yx0-f188.google.com [209.85.213.188])
+	by shut (Postfix) with ESMTP id D5137205D2
+	for <ark-bikes@e.example.com>; Sun, 16 Jan 2011 19:13:31 -0800 (PST)
+Received: by yxp4 with SMTP id 4sf3304810yxp.15
+        for <ark-bikes@e.example.com>; Sun, 16 Jan 2011 19:13:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlegroups.com; s=beta;
+        h=domainkey-signature:x-beenthere:received-spf:from:subject:date
+         :message-id:to:mime-version:x-mailer:x-original-sender
+         :x-original-authentication-results:reply-to:precedence:mailing-list
+         :list-id:list-post:list-help:list-archive:sender:list-unsubscribe
+         :content-type;
+        bh=fNyGLV7nxsFhOkj23YgvKmCQpEcrrhb8hDF40wlCG+0=;
+        b=XSMIAqDI5xOMqOJD1vxJMXgjHUhM5yXF/XCgVFq/JrifeBZWIhOAG5hYBlb/rgVDli
+         ZkJZ3ET/rqWc8EmGm01/pYq8lgiUixW1yG1QwvG+u6xF+dK3R6Zm1Uo0xhCuMVPJBzrU
+         5QagH+v+nX3Mpy5nHprPwp/pD/feoUcrV2lzQ=
+DomainKey-Signature: a=rsa-sha1; c=nofws;
+        d=googlegroups.com; s=beta;
+        h=x-beenthere:received-spf:from:subject:date:message-id:to
+         :mime-version:x-mailer:x-original-sender
+         :x-original-authentication-results:reply-to:precedence:mailing-list
+         :list-id:list-post:list-help:list-archive:sender:list-unsubscribe
+         :content-type;
+        b=sjIfHjQAF/QBWxrvNHlBeaUaToZ950D5ppahzyX3VNwVWJEOkcfWrYy+tTW2Gp8peP
+         mcH4Erd6Fh5vpYiqWt/EZMasNO+SuLK0zNdYU7swsxWF/8t+unvgfL4fJy463lgu0kM2
+         JOYGm7bU71LUDB2/t5I5ilakXjMelY1/xc95s=
+Received: by 10.100.44.13 with SMTP id r13mr107119anr.4.1295234008434;
+        Sun, 16 Jan 2011 19:13:28 -0800 (PST)
+X-BeenThere: bikes@googlegroups.com
+Received: by 10.101.105.19 with SMTP id h19ls842041anm.5.p; Sun, 16 Jan 2011
+ 19:13:27 -0800 (PST)
+Received: by 10.100.251.4 with SMTP id y4mr125981anh.33.1295234007504;
+        Sun, 16 Jan 2011 19:13:27 -0800 (PST)
+Received: by 10.100.251.4 with SMTP id y4mr125980anh.33.1295234007486;
+        Sun, 16 Jan 2011 19:13:27 -0800 (PST)
+Received: from mail-yx0-f170.google.com (mail-yx0-f170.google.com [209.85.213.170])
+        by gmr-mx.google.com with ESMTP id 28si1605950anv.0.2011.01.16.19.13.26;
+        Sun, 16 Jan 2011 19:13:26 -0800 (PST)
+Received-SPF: pass (google.com: domain of example@gmail.com designates 209.85.213.170 as permitted sender) client-ip=209.85.213.170;
+Received: by mail-yx0-f170.google.com with SMTP id 11so1641742yxi.1
+        for <bikes@googlegroups.com>; Sun, 16 Jan 2011 19:13:26 -0800 (PST)
+Received: by 10.150.185.2 with SMTP id i2mr3657432ybf.155.1295234006298;
+        Sun, 16 Jan 2011 19:13:26 -0800 (PST)
+Received: from nibbler.innerdot.com (208-106-20-165.dsl.static.sonic.net [208.106.20.165])
+        by mx.google.com with ESMTPS id p32sm2361729ybk.20.2011.01.16.19.13.24
+        (version=TLSv1/SSLv3 cipher=RC4-MD5);
+        Sun, 16 Jan 2011 19:13:25 -0800 (PST)
+From: Jim Spring <example@gmail.com>
+Subject: [bikes] experience with 2x10 groupsets?
+Date: Sun, 16 Jan 2011 19:13:22 -0800
+Message-Id: <7C32B3F0-FFBD-43D1-9492-F576EB1688CD@gmail.com>
+To: bikes <bikes@googlegroups.com>
+Mime-Version: 1.0 (Apple Message framework v1082)
+X-Mailer: Apple Mail (2.1082)
+X-Original-Sender: example@gmail.com
+X-Original-Authentication-Results: gmr-mx.google.com; spf=pass (google.com:
+ domain of example@gmail.com designates 209.85.213.170 as permitted sender)
+ smtp.mail=example@gmail.com; dkim=pass (test mode) header.i=@gmail.com
+Reply-To: example@gmail.com
+Precedence: list
+Mailing-list: list bikes@googlegroups.com; contact bikes+owners@googlegroups.com
+List-ID: <bikes.googlegroups.com>
+List-Post: <http://groups.google.com/group/bikes/post?hl=en_US>, <mailto:bikes@googlegroups.com>
+List-Help: <http://groups.google.com/support/?hl=en_US>, <mailto:bikes+help@googlegroups.com>
+List-Archive: <http://groups.google.com/group/bikes?hl=en_US>
+Sender: bikes@googlegroups.com
+List-Unsubscribe: <http://groups.google.com/group/bikes/subscribe?hl=en_US>, <mailto:bikes+unsubscribe@googlegroups.com>
+Content-Type: text/plain; charset=ISO-8859-1
+
+My full suspension is running the original groupset it came with (a mix of lx/xt that are ~5 years old) and tuning it is becoming a pain.
+
+I've been looking at the X9 2x10 but it appears Shimano has some 2x10 groups as well.
+
+Any thoughts/comments?  In all likelihood, this will end up being a wheel/groupset upgrade since the LX hubs have the disk (for the disc brake) grometed to the hub.
+
+Thoughts/insights?
+
+Thanks
+-example
+
+--
+You received this message because you are subscribed to the " (BIKES)" group.
+
+BIKES is a local mountain biking advocacy organization. http://www.bikes.org
+
+To post to this group, send email to bikes@googlegroups.com
+To unsubscribe, send email to bikes+unsubscribe@googlegroups.com
+For more options, visit this group at http://groups.google.com/group/bikes

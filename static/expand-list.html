@@ -1,0 +1,14 @@
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Url</th>
+    <td><a href="/#/expand/edit/new">Add...</a></th></td>
+  </tr>
+ <tr ng-repeat="expand in expands">
+    <td>{{expand.name}}</td>
+    <td><a target="_blank" ng-href="{{expand.url}}">original</a>
+        <a target="_blank"
+           ng-href="/expand/{{expand.name}}.xml">expanded</a></td>
+    <td><a ng-href="/#/expand/edit/{{expand.id}}">edit</a></th></td>
+  </tr>
+</table>
