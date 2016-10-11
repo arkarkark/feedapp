@@ -1,5 +1,7 @@
 *.pyc
-oauth_settings.py
-gdata-python-client
 atom
 gdata
+oauth_settings.py
+vendor
+tlslite
+PyRSS2Gen.py

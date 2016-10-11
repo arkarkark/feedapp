@@ -8,6 +8,9 @@ __author__ = 'wtwf.com (Alex K)'
 # export PYTHONPATH=$PYTHONPATH:/usr/local/google_appengine/
 # export PYTHONPATH=$PYTHONPATH:/usr/local/google_appengine/lib/yaml/lib/
 
+import sys
+sys.modules['fcntl'] = 1
+
 import oauth
 import blogger
 import expand
