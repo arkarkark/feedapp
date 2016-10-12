@@ -8,11 +8,12 @@ __author__ = 'wtwf.com (Alex K)'
 # export PYTHONPATH=$PYTHONPATH:/usr/local/google_appengine/
 # export PYTHONPATH=$PYTHONPATH:/usr/local/google_appengine/lib/yaml/lib/
 
-import sys
-sys.modules['fcntl'] = 1
+from google.appengine.ext import vendor
 
-import oauth
-import blogger
+vendor.add('lib')
+
+# import oauth
+# import blogger
 import expand
 import mail
 
@@ -22,12 +23,12 @@ from wtwf import wtwfhandler
 from crud import crud_handler
 
 app = webapp.WSGIApplication([
-  (r'/oauth/(.*)', oauth.OAuthDanceHandler),
-  ('/blogger', blogger.BloggerHandler),
-  (r'/feed/([a-zA-Z0-9_-]+)', blogger.GetFeedHandler),
+  # (r'/oauth/(.*)', oauth.OAuthDanceHandler),
+  # ('/blogger', blogger.BloggerHandler),
+  # (r'/feed/([a-zA-Z0-9_-]+)', blogger.GetFeedHandler),
   (r'/mailfeed/([a-zA-Z0-9_-]+)', mail.FeedFromEmail),
   ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),
-  ('/data/blogger/feed.json', blogger.BloggerDataHandler),
+  # ('/data/blogger/feed.json', blogger.BloggerDataHandler),
   ('/data/expand/feed.json', crud_handler.GetCrudHandler(expand.ExpandFeed)),
   ('/data/expand/item.json', expand.ExpandItemDataHandler),
   ('/data/mail/feed.json', crud_handler.GetCrudHandler(mail.MailFeed)),

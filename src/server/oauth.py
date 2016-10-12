@@ -137,8 +137,8 @@ class OAuthDanceHandler(webapp.RequestHandler):
   will be redirected back to this GET handler and their authorized request token
   will be exchanged for a long-lived access token."""
 
-  def __init__(self):
-    super(OAuthDanceHandler, self).__init__()
+  def __init__(self, *args):
+    super(OAuthDanceHandler, self).__init__(*args)
     self.client = OAuthClient(self)
 
   def get(self, action=''):
