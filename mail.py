@@ -20,8 +20,8 @@ from wtwf import wtwfhandler
 from wtwf.WtwfModel import WtwfNdbModel
 import sanitizeblogger
 
-from lib.crud import crud_model
-from lib.crud import crud_handler
+from crud import crud_model
+from crud import crud_handler
 
 # wget -O - 'http://localhost:8080/mailfeed/test' | xmllint -format -
 

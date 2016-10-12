@@ -16,6 +16,7 @@ Heavily used resources and ideas from:
 __author__ = ('wiktorgworek (Wiktor Gworek), '
               'e.bidelman (Eric Bidelman)')
 
+import os
 import gdata.auth
 import gdata.client
 import gdata.alt.appengine
@@ -24,6 +25,8 @@ import gdata.blogger.service
 from google.appengine.api import users
 from google.appengine.ext import db
 from google.appengine.ext import webapp
+from google.appengine.ext.webapp import template
+
 
 import oauth_settings
 
@@ -107,7 +110,7 @@ class OAuthClient(object):
         self.blogger.current_token = access_token
         self.blogger.SetOAuthToken(access_token)
 
-    self.handler.redirect(SETTINGS['FINAL_URL'])
+    self.handler.redirect('/')
 
   def revoke_token(self):
     """Revokes the current user's OAuth access token."""
@@ -134,8 +137,8 @@ class OAuthDanceHandler(webapp.RequestHandler):
   will be redirected back to this GET handler and their authorized request token
   will be exchanged for a long-lived access token."""
 
-  def __init__(self, *args):
-    super(OAuthDanceHandler, self).__init__(*args)
+  def __init__(self):
+    super(OAuthDanceHandler, self).__init__()
     self.client = OAuthClient(self)
 
   def get(self, action=''):
@@ -147,8 +150,8 @@ class OAuthDanceHandler(webapp.RequestHandler):
 class OAuthHandler(webapp.RequestHandler):
   """All handlers requiring OAuth should inherit from this class."""
 
-  def __init__(self, *args):
-    super(OAuthHandler, self).__init__(*args)
+  def __init__(self):
+    super(OAuthHandler, self).__init__()
     self.client = OAuthClient(self)
 
 def requiresOAuth(fun):

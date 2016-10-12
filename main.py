@@ -19,22 +19,20 @@ import mail
 from google.appengine.ext import webapp
 
 from wtwf import wtwfhandler
-from lib.crud import crud_handler
+from crud import crud_handler
 
 app = webapp.WSGIApplication([
-    (r'/oauth/(.*)', oauth.OAuthDanceHandler),
-    ('/blogger', blogger.BloggerHandler),
-    (r'/feed/([a-zA-Z0-9_-]+)', blogger.GetFeedHandler),
-    (r'/mailfeed/([a-zA-Z0-9_-]+)', mail.FeedFromEmail),
-    ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),
-    ('/data/blogger/feed.json', blogger.BloggerDataHandler),
-    ('/data/expand/feed.json',
-     crud_handler.GetCrudHandler(expand.ExpandFeed)),
-    ('/data/expand/item.json', expand.ExpandItemDataHandler),
-    ('/data/mail/feed.json',
-     crud_handler.GetCrudHandler(mail.MailFeed)),
-    ('/data/mail/item.json', mail.MailItemDataHandler),
-    ('/data/user/user.json', wtwfhandler.UserHandler),
-    ('/admin/setupdemo', mail.SetupDemo),
-    (r'/_ah/mail/(.+)', mail.EmailToFeed),
-    ])
+  (r'/oauth/(.*)', oauth.OAuthDanceHandler),
+  ('/blogger', blogger.BloggerHandler),
+  (r'/feed/([a-zA-Z0-9_-]+)', blogger.GetFeedHandler),
+  (r'/mailfeed/([a-zA-Z0-9_-]+)', mail.FeedFromEmail),
+  ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),
+  ('/data/blogger/feed.json', blogger.BloggerDataHandler),
+  ('/data/expand/feed.json', crud_handler.GetCrudHandler(expand.ExpandFeed)),
+  ('/data/expand/item.json', expand.ExpandItemDataHandler),
+  ('/data/mail/feed.json', crud_handler.GetCrudHandler(mail.MailFeed)),
+  ('/data/mail/item.json', mail.MailItemDataHandler),
+  ('/data/user/user.json', wtwfhandler.UserHandler),
+  ('/admin/setupdemo', mail.SetupDemo),
+  (r'/_ah/mail/(.+)', mail.EmailToFeed),
+])

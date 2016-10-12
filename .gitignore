@@ -5,3 +5,5 @@ oauth_settings.py
 vendor
 tlslite
 PyRSS2Gen.py
+dateutil
+node_modules
