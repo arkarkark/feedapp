@@ -1,10 +1,4 @@
 *.pyc
-atom
-gdata
-oauth_settings.py
-vendor
-tlslite
-PyRSS2Gen.py
-dateutil
+src/server/oauth_settings.py
 node_modules
-app
+dist

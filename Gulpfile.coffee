@@ -1,16 +1,36 @@
-gulp = require "gulp"
-watch = require "gulp-watch"
+gulp   = require "gulp"
+ignore = require "gulp-ignore"
+slm    = require "gulp-slm"
+watch  = require "gulp-watch"
+coffee = require "gulp-coffee"
 
-assets = [
-  "*.yaml"
-  "src/server/**/*"
-  "src/client/**/*"
-]
+assets =
+  include: [
+    "*.yaml"
+    "src/server/**/*"
+    "src/client/**/*"
+  ]
+  exclude: [
+    "**/*.slim"
+    "**/*.coffee"
+  ]
 
-destination = "app/"
+destination = "dist/"
 
-gulp.task "default", ->
-  gulp.src(assets).pipe(gulp.dest(destination))
+gulp.task "default", ["slm", "coffee"], ->
+  gulp.src(assets.include).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(destination))
+
+gulp.task "slm", ->
+  gulp.src("src/client/**/*.slim")
+    .pipe(slm({}))
+    .pipe(gulp.dest(destination))
+
+gulp.task "coffee", ->
+  gulp.src("src/client/**/*.coffee")
+    .pipe(coffee())
+    .pipe(gulp.dest(destination))
 
 gulp.task "watch", ->
-  watch(assets).pipe(gulp.dest(destination))
+  watch(assets.include).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(destination))
+  watch("src/client/**/*.slim").pipe(slm({})).pipe(gulp.dest(destination))
+  watch("src/client/**/*.coffee").pipe(coffee()).pipe(gulp.dest(destination))

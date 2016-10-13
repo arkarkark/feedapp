@@ -4,6 +4,10 @@ abbrev@1:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/abbrev/-/abbrev-1.0.9.tgz#91b4792588a7738c25f35dd6f63752a2f8776135"
 
+amdefine@>=0.0.4:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.0.tgz#fd17474700cb5cc9c2b709f0be9d23ce3c198c33"
+
 angular@1.5.8:
   version "1.5.8"
   resolved "https://registry.yarnpkg.com/angular/-/angular-1.5.8.tgz#925a5392b8c212d09572dc446db7e01264e094cb"
@@ -213,7 +217,7 @@ code-point-at@^1.0.0:
   dependencies:
     number-is-nan "^1.0.0"
 
-coffee-script:
+coffee-script, coffee-script@^1.10.0:
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/coffee-script/-/coffee-script-1.11.1.tgz#bf1c47ad64443a0d95d12df2b147cc0a4daad6e9"
 
@@ -661,7 +665,38 @@ gulp:
     v8flags "^2.0.2"
     vinyl-fs "^0.3.0"
 
-gulp-util@^3.0.0, gulp-util@^3.0.6:
+gulp-coffee:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/gulp-coffee/-/gulp-coffee-2.3.2.tgz#e85413c95a6f7695ea160fb590cc578f3dbda5b1"
+  dependencies:
+    coffee-script "^1.10.0"
+    gulp-util "^3.0.2"
+    merge "^1.2.0"
+    through2 "^0.6.3"
+    vinyl-sourcemaps-apply "^0.1.4"
+
+gulp-ignore:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/gulp-ignore/-/gulp-ignore-2.0.1.tgz#e2ec217b53fccee472bbddbe7d1dc11fffa0ef68"
+  dependencies:
+    gulp-match "^1.0.0"
+    through2 "^2.0.0"
+
+gulp-match@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/gulp-match/-/gulp-match-1.0.2.tgz#f94c88e946f9faf8a50cb5a6e1b95cb5eeb33632"
+  dependencies:
+    minimatch "^3.0.0"
+
+gulp-slm:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/gulp-slm/-/gulp-slm-1.0.7.tgz#bcbf97a7e71d9e3c7a8fbaafb3a76acbf5107383"
+  dependencies:
+    gulp-util "^3.0.0"
+    slm "^0.5.1"
+    through2 "^2.0.0"
+
+gulp-util@^3.0.0, gulp-util@^3.0.2, gulp-util@^3.0.6:
   version "3.0.7"
   resolved "https://registry.yarnpkg.com/gulp-util/-/gulp-util-3.0.7.tgz#78925c4b8f8b49005ac01a011c557e6218941cbb"
   dependencies:
@@ -1142,6 +1177,10 @@ meow@^3.3.0:
     redent "^1.0.0"
     trim-newlines "^1.0.0"
 
+merge@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.0.tgz#7531e39d4949c281a66b8c5a6e0265e8b05894da"
+
 micromatch@^2.1.5, micromatch@^2.3.7:
   version "2.3.11"
   resolved "https://registry.yarnpkg.com/micromatch/-/micromatch-2.3.11.tgz#86677c97d1720b363431d04d0d15293bd38c1565"
@@ -1600,11 +1639,21 @@ signal-exit@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.1.tgz#5a4c884992b63a7acd9badb7894c3ee9cfccad81"
 
+slm@^0.5.1:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/slm/-/slm-0.5.1.tgz#334bcc58c054895f11c67518c2335f9a542f5688"
+
 sntp@1.x.x:
   version "1.0.9"
   resolved "https://registry.yarnpkg.com/sntp/-/sntp-1.0.9.tgz#6541184cc90aeea6c6e7b35e2659082443c66198"
   dependencies:
     hoek "2.x.x"
+
+source-map@^0.1.39:
+  version "0.1.43"
+  resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.1.43.tgz#c24bc146ca517c1471f5dacbe2571b2b7f9e3346"
+  dependencies:
+    amdefine ">=0.0.4"
 
 sparkles@^1.0.0:
   version "1.0.0"
@@ -1720,7 +1769,7 @@ tar@~2.2.0, tar@~2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-through2@^0.6.1:
+through2@^0.6.1, through2@^0.6.3:
   version "0.6.5"
   resolved "https://registry.yarnpkg.com/through2/-/through2-0.6.5.tgz#41ab9c67b29d57209071410e1d7a7a968cd3ad48"
   dependencies:
@@ -1822,6 +1871,12 @@ vinyl-fs@^0.3.0:
     strip-bom "^1.0.0"
     through2 "^0.6.1"
     vinyl "^0.4.0"
+
+vinyl-sourcemaps-apply@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/vinyl-sourcemaps-apply/-/vinyl-sourcemaps-apply-0.1.4.tgz#c5fcbd43e2f238423c2dc98bddd6f79b72bc345b"
+  dependencies:
+    source-map "^0.1.39"
 
 vinyl@^0.4.0:
   version "0.4.6"
