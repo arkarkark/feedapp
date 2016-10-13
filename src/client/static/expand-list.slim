@@ -1,0 +1,13 @@
+table
+  tr
+    th Name
+    th Url
+    td
+      a href="/#/expand/edit/new"  Add...
+  tr ng-repeat=("expand in expands")
+    td  {expand.name}
+    td
+      a ng-href="{{expand.url}}" target="_blank"  original
+      a ng-href="/expand/{{expand.name}}.xml" target="_blank"  expanded
+    td
+      a ng-href="/#/expand/edit/{{expand.id}}"  edit

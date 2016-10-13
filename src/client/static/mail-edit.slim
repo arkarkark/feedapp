@@ -1,0 +1,20 @@
+table
+  tr
+    td Name:
+    td width="700"
+      input ng-model="feed.name" type="text" /
+input ng-click="update()" type="submit" value="save" /
+input ng-click="remove()" type="submit" value="remove" /
+input ng-click="cancel()" type="submit" value="cancel" /
+hr/
+div ng-hide="items.length"  No Items to display. Load the feed first?
+table ng-show="items.length"
+  tr
+    td style=("vertical-align:text-top;\nwhite-space: nowrap; overflow: hidden; max-width: 200px;")
+      div ng-repeat=("item in items")
+        a ng-click="selectItem(item.id)" title="{{item.subject}}" {{item.subject}}
+    td style="vertical-align:text-top;"
+      div ng-hide="item"  &lt;-Click an item title on the left.
+      div ng-show="item"
+        button ng-click="tombstoneItem()"  Tombstone
+      div ng-bind-html-unsafe="stripScripts(item.body)"

@@ -1,3 +1,4 @@
+debug  = require "gulp-debug"
 gulp   = require "gulp"
 ignore = require "gulp-ignore"
 slm    = require "gulp-slm"
@@ -17,20 +18,36 @@ assets =
 
 destination = "dist/"
 
+
+handleError = ->
+  (err) ->
+    console.error(err.toString())
+    @emit?("end")
+
 gulp.task "default", ["slm", "coffee"], ->
   gulp.src(assets.include).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(destination))
 
 gulp.task "slm", ->
   gulp.src("src/client/**/*.slim")
-    .pipe(slm({}))
+    .pipe(debug())
+    .pipe(slm({}).on('error', handleError('templates')))
     .pipe(gulp.dest(destination))
 
 gulp.task "coffee", ->
   gulp.src("src/client/**/*.coffee")
+    .pipe(debug())
     .pipe(coffee())
     .pipe(gulp.dest(destination))
 
 gulp.task "watch", ->
-  watch(assets.include).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(destination))
-  watch("src/client/**/*.slim").pipe(slm({})).pipe(gulp.dest(destination))
-  watch("src/client/**/*.coffee").pipe(coffee()).pipe(gulp.dest(destination))
+  watch(assets.include)
+    .pipe(ignore.exclude(assets.exclude))
+    .pipe(gulp.dest(destination))
+  watch("src/client/**/*.slim")
+    .pipe(debug())
+    .pipe(slm({}).on('error', handleError('templates')))
+    .pipe(gulp.dest(destination))
+  watch("src/client/**/*.coffee")
+    .pipe(debug())
+    .pipe(coffee())
+    .pipe(gulp.dest(destination))

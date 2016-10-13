@@ -4,11 +4,11 @@
   "description": "App Engine RSS Feed maker",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf app",
+    "clean": "bash -c 'rm -rfv dist'",
     "dev": "./node_modules/.bin/gulp; ./node_modules/.bin/gulp watch & cd dist; dev_appserver.py --host=0.0.0.0 --port 6724 .",
     "install": "./node_modules/.bin/gulp; cd dist; gcloud --quiet app --project feedappywtwf deploy --version=2",
-    "setup": "setup.sh",
-    "test": "for fil in *_test.py; do $fil; done"
+    "setup": "./setup.sh",
+    "test": "bash -c 'for fil in *_test.py; do $fil; done'"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "coffee-script": "^1.11.1",
     "gulp": "^3.9.1",
     "gulp-coffee": "^2.3.2",
+    "gulp-debug": "^2.1.2",
     "gulp-ignore": "^2.0.1",
     "gulp-slm": "^1.0.7",
     "gulp-watch": "^4.3.10"
