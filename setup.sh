@@ -19,8 +19,11 @@ if [ ! -d  dist/lib/python-dateutil-1.5 ]; then
 fi
 (cd dist/lib/; ln -s -f python-dateutil-1.5/dateutil dateutil)
 
-if which yarnysys; then
-  echo "Running yarn"
+if which yarn; then
+  yarn
 else
-  echo "running NPM"
+  echo "You really should install yarn... npm install -g yarn"
+  npm install
 fi
+
+./node_modules/.bin/gulp
