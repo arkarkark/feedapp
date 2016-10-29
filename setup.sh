@@ -22,7 +22,7 @@ fi
 if which yarn; then
   yarn
 else
-  echo "You really should install yarn... npm install -g yarn"
+  echo "You really should install yarn see https://yarnpkg.com/en/docs/install"
   npm install
 fi
 
