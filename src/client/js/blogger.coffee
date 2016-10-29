@@ -1,4 +1,10 @@
-BloggerCtrl = ($scope, $routeParams, $location, Blogger) ->
+m = angular.module('bloggerServices', [ 'ngResource' ])
+
+
+m.factory 'Blogger', ($resource) ->
+  $resource 'data/blogger/feed.json?blog_id=:blog_id', { blog_id: '@blog_id' }, {}
+
+m.controller "BloggerCtrl", ($scope, $routeParams, $location, Blogger) ->
   blog_id = 'new'
   if $routeParams.blog_id
     blog_id = $routeParams.blog_id
@@ -21,6 +27,3 @@ BloggerCtrl = ($scope, $routeParams, $location, Blogger) ->
     return
 
   return
-
-angular.module('bloggerServices', [ 'ngResource' ]).factory 'Blogger', ($resource) ->
-  $resource 'data/blogger/feed.json?blog_id=:blog_id', { blog_id: '@blog_id' }, {}

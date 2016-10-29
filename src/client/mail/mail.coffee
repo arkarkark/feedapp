@@ -1,5 +1,25 @@
-MailCtrl = ($scope, $routeParams, $location, MailFeed, MailFeedItem) ->
-  id = 'new'
+"use strict"
+m = angular.module "mailServices", [ "ngResource" ]
+
+m.factory "MailFeed", ($resource) ->
+  $resource "data/mail/feed.json?id=:id", { id: "@id" }, {}
+
+m.factory "MailFeedItem", ($resource) ->
+  $resource(
+    "data/mail/item.json?id=:id&parent_id=:parent_id&action=:action"
+    {
+      id: "@id"
+      parent_id: "@parent_id"
+    }
+    {
+      tombstone:
+        method: "POST"
+        params: action: "tombstone"
+    }
+  )
+
+m.controller "MailCtrl", ($scope, $routeParams, $location, MailFeed, MailFeedItem) ->
+  id = "new"
   if $routeParams.id
     id = $routeParams.id
   $scope.feeds = MailFeed.query()
@@ -13,20 +33,20 @@ MailCtrl = ($scope, $routeParams, $location, MailFeed, MailFeedItem) ->
   $scope.update = ->
     $scope.feed.$save (ans) ->
       $scope.feeds = MailFeed.query()
-      $location.path '/mail'
+      $location.path "/mail"
       return
     return
 
   $scope.remove = ->
-    if confirm('Are you sure you want to remove feed "' + $scope.feed.feed_name + '" ?')
+    if confirm("""Are you sure you want to remove feed "#{$scope.feed.feed_name}" ?""")
       $scope.feed.$remove (ans) ->
         $scope.feeds = MailFeed.query()
-        $location.path '/mail'
+        $location.path "/mail"
         return
     return
 
   $scope.cancel = ->
-    $location.path '/mail'
+    $location.path "/mail"
     return
 
   $scope.selectItem = (itemId) ->
@@ -46,25 +66,4 @@ MailCtrl = ($scope, $routeParams, $location, MailFeed, MailFeedItem) ->
       i++
     return
 
-  return
-
-'use strict'
-m = angular.module 'mailServices', [ 'ngResource' ]
-
-
-m.factory 'MailFeed', ($resource) ->
-  $resource 'data/mail/feed.json?id=:id', { id: '@id' }, {}
-
-m.factory 'MailFeedItem', ($resource) ->
-  $resource(
-    'data/mail/item.json' + '?id=:id&parent_id=:parent_id&action=:action'
-    {
-      id: '@id'
-      parent_id: '@parent_id'
-    }
-    {
-      tombstone:
-        method: 'POST'
-        params: action: 'tombstone'
-    }
-  )
+  return this

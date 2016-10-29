@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "bash -c 'rm -rfv dist'",
     "dev": "./node_modules/.bin/gulp; ./node_modules/.bin/gulp watch & cd dist; dev_appserver.py --host=0.0.0.0 --port 6724 .",
-    "install": "./node_modules/.bin/gulp; cd dist; gcloud --quiet app --project feedappywtwf deploy --version=2",
+    "release": "./node_modules/.bin/gulp; cd dist; gcloud --quiet app --project feedappywtwf deploy --version=2",
     "setup": "./setup.sh",
     "test": "bash -c 'for fil in *_test.py; do $fil; done'"
   },
@@ -25,6 +25,8 @@
   "homepage": "https://github.com/arkarkark/feedapp#readme",
   "dependencies": {
     "angular": "1.5.8",
+    "angular-resource": "1.5.8",
+    "angular-route": "1.5.8",
     "coffee-script": "^1.11.1",
     "gulp": "^3.9.1",
     "gulp-coffee": "^2.3.2",
@@ -32,5 +34,10 @@
     "gulp-ignore": "^2.0.1",
     "gulp-slm": "^1.0.7",
     "gulp-watch": "^4.3.10"
+  },
+  "devDependencies": {
+    "coffeelint": "1.16.0",
+    "coffeelint-prefer-double-quotes": "0.1.0",
+    "coffeelint-prefer-symbol-operator": "0.1.1"
   }
 }

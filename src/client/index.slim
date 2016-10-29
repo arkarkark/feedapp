@@ -1,0 +1,27 @@
+doctype html
+html ng-app="feedapp"
+  head
+    title Feed App
+    meta content="NOINDEX,NOFOLLOW" name="ROBOTS" /
+    link href="/assets/index.css" rel="stylesheet" type="text/css" /
+    link href="/assets/rss.png" rel="icon" /
+    meta content="N6ApU5tOk1hckZrZpviKWpc92cr96VERgaMTqpFPeYk" name="google-site-verification" /
+    script src="/assets/vendor/angular.min.js"
+    script src="/assets/vendor/angular-route.min.js"
+    script src="/assets/vendor/angular-resource.min.js"
+    script src="/assets/app.js"
+    script src="/assets/js/header.js"
+    script src="/assets/js/expand.js"
+    script src="/assets/js/blogger.js"
+    script src="/assets/mail/mail.js"
+    script src="/assets/js/util.js"
+  body
+    #header ng-controller="HeaderCtrl"
+      .left
+        a href="/"  Feed App
+      .right
+        span ng-show="user.username"
+          span ng-bind="user.username"
+          a ng-href="{{user.logoutUrl}}"  Logout
+        a ng-hide="user.username" ng-href=("{{ user.loginUrl }}")  Login
+    div [ng-view]

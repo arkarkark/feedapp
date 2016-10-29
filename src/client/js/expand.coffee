@@ -1,49 +1,69 @@
-ExpandCtrl = ($scope, $routeParams, $location, Expand, ExpandItem) ->
-  id = 'new'
+m = angular.module("expandServices", [ "ngResource" ])
+
+m.factory "Expand", ($resource) ->
+  $resource "data/expand/feed.json?id=:id", { id: "@id" }, {}
+
+
+m.factory "ExpandItem", ($resource) ->
+  $resource(
+    "data/expand/item.json?id=:id&parent_id=:parent_id&action=:action"
+    {
+      id: "@id"
+      parent_id: "@parent_id"
+    }
+    {
+      preview:
+        method: "POST"
+        params: action: "preview"
+    }
+  )
+
+m.controller "ExpandCtrl", ($scope, $routeParams, $location, Expand, ExpandItem) ->
+  id = "new"
   if $routeParams.id
     id = $routeParams.id
   $scope.expands = Expand.query()
   $scope.expand = Expand.get(id: id)
   $scope.items = ExpandItem.query(
-    id: ''
+    id: ""
     parent_id: id)
   $scope.feed_types = [
     {
       value: 0
-      name: 'rss'
+      name: "rss"
     }
     {
       value: 1
-      name: 'html page'
+      name: "html page"
     }
     {
       value: 2
-      name: 'html link list'
+      name: "html link list"
     }
   ]
 
   $scope.update = ->
     $scope.expand.$save (ans) ->
       $scope.expands = Expand.query()
-      $location.path '/expand'
+      $location.path "/expand"
       return
     return
 
   $scope.remove = ->
-    if confirm('Are you sure you want to remove feed "' + $scope.expand.name + '" ?')
+    if confirm("""Are you sure you want to remove feed "#{$scope.expand.name}" ?""")
       $scope.expand.$remove (ans) ->
         # redirect to the main page
         $scope.expands = Expand.query()
-        $location.path '/expand'
+        $location.path "/expand"
         return
     return
 
   $scope.cancel = ->
-    $location.path '/expand'
+    $location.path "/expand"
     return
 
   $scope.clearAllItems = ->
-    alert 'TODO(ark) clearing!'
+    alert "TODO(ark) clearing!"
     return
 
   $scope.selectItem = (itemId) ->
@@ -64,34 +84,14 @@ ExpandCtrl = ($scope, $routeParams, $location, Expand, ExpandItem) ->
     return
 
   $scope.importExport = ->
-    ans = prompt('got json?', JSON.stringify($scope.expand))
+    ans = prompt("got json?", JSON.stringify($scope.expand))
     if ans
       n = JSON.parse(ans)
       for v of n
-        if v == 'id'
+        if v == "id"
           continue
         if $scope.expand.hasOwnProperty(v)
           $scope.expand[v] = n[v]
     return
 
   return
-
-m = angular.module('expandServices', [ 'ngResource' ])
-
-m.factory 'Expand', ($resource) ->
-  $resource 'data/expand/feed.json?id=:id', { id: '@id' }, {}
-
-
-m.factory 'ExpandItem', ($resource) ->
-  $resource(
-    'data/expand/item.json?' + 'id=:id&parent_id=:parent_id&action=:action'
-    {
-      id: '@id'
-      parent_id: '@parent_id'
-    }
-    {
-      preview:
-        method: 'POST'
-        params: action: 'preview'
-    }
-  )
