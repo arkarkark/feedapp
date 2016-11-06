@@ -10,6 +10,9 @@ assets =
     "*.yaml"
     "src/server/**/*"
   ]
+  testdata: [
+    "testdata/**/*"
+  ]
   assets: [
     "src/client/**/*"
   ]
@@ -28,6 +31,7 @@ dirs =
   destination: "dist"
   assets:      "dist/assets"
   vendor:      "dist/assets/vendor"
+  testdata:    "dist/testdata"
 
 handleError = ->
   (err) ->
@@ -37,6 +41,7 @@ handleError = ->
 gulp.task "default", ["slm", "coffee", "css", "vendor"], ->
   gulp.src(assets.include).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(dirs.destination))
   gulp.src(assets.assets).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(dirs.assets))
+  gulp.src(assets.testdata).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(dirs.testdata))
 
 gulp.task "slm", ->
   gulp.src("src/client/**/*.slim")

@@ -31,11 +31,11 @@ m.config ($routeProvider) ->
       templateUrl: "assets/static/expand-edit.html"
       controller: "ExpandCtrl"
     ).when("/mail",
-      templateUrl: "assets/mail/mail-list.html"
+      templateUrl: "/assets/mail/mail.html"
       controller: "MailCtrl"
     ).when("/mail/edit/:id",
-      templateUrl: "assets/mail/mail-edit.html"
-      controller: "MailCtrl"
+      templateUrl: "/assets/mail/mail_edit.html"
+      controller: "MailEditController"
     ).otherwise "/"
   return
 

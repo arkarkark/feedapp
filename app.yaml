@@ -18,7 +18,7 @@ handlers:
   upload: assets/index.html
   login: admin
 
-- url: /mail
+- url: /mail($|/.*)
   static_files: assets/index.html
   upload: assets/index.html
   login: admin

@@ -1,24 +1,8 @@
 "use strict"
-m = angular.module "mailServices", [ "ngResource" ]
 
-m.factory "MailFeed", ($resource) ->
-  $resource "/data/mail/feed.json?id=:id", { id: "@id" }, {}
+m = angular.module "mailServices"
 
-m.factory "MailFeedItem", ($resource) ->
-  $resource(
-    "/data/mail/item.json?id=:id&parent_id=:parent_id&action=:action"
-    {
-      id: "@id"
-      parent_id: "@parent_id"
-    }
-    {
-      tombstone:
-        method: "POST"
-        params: action: "tombstone"
-    }
-  )
-
-m.controller "MailCtrl", (
+m.controller "MailEditController", (
   $location
   $routeParams
   $scope
@@ -30,7 +14,6 @@ m.controller "MailCtrl", (
   id = "new"
   if $routeParams.id
     id = $routeParams.id
-  $scope.feeds = MailFeed.query()
   $scope.feed = MailFeed.get(id: id)
   $scope.items = MailFeedItem.query({ parent_id: id }, ->
     $scope.selectItem $scope.items[0].id if $scope.items.length
@@ -38,25 +21,20 @@ m.controller "MailCtrl", (
   )
   $scope.stripScripts = StripScripts
 
+  goToMail = ->
+    $timeout(
+      -> $location.path "/mail"
+      200
+    )
+
   $scope.update = ->
-    console.log("Saving")
     $scope.feed.$save (ans) ->
-      console.log("Saved")
-      $timeout(
-        -> $scope.feeds = MailFeed.query()
-        2000
-      )
-      $location.path "/mail"
-      return
-    return
+      goToMail()
 
   $scope.remove = ->
     if confirm("""Are you sure you want to remove feed "#{$scope.feed.name}" ?""")
       $scope.feed.$remove (ans) ->
-        $scope.feeds = MailFeed.query (feeds) ->
-          console.log(JSON.stringify(feeds, null, 2))
-        $location.path "/mail"
-        return
+        goToMail()
     return
 
   $scope.cancel = ->
