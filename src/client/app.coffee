@@ -1,21 +1,24 @@
-"use strict"
+require "./index.slim"
+
+angular = require "angular"
+
+require "angular-route"
+
+console.log("SLIM", require "./default.slim")
 
 m = angular.module "feedapp", [
   "ngRoute"
-  "userServices"
-  "expandServices"
-  "bloggerServices"
-  "mailServices"
+  require("./header_module").name
+  require("./mail/mail_module").name
+  # "expandServices"
+  # "bloggerServices"
 ]
-
-m.controller "DefaultCtrl", ->
 
 m.config ($routeProvider) ->
   $routeProvider
     .when(
       "/"
-      templateUrl: "assets/default.html"
-      controller: "DefaultCtrl"
+      templateUrl: require "./default.slim"
     ).when(
       "/blogger"
       templateUrl: "assets/static/blogger-list.html"

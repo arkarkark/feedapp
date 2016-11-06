@@ -1,6 +1,4 @@
-"use strict"
-
-m = angular.module "mailServices"
+m = require "./mail_module"
 
 m.controller "MailEditController", (
   $location
@@ -9,7 +7,6 @@ m.controller "MailEditController", (
   $timeout
   MailFeed
   MailFeedItem
-  StripScripts
 ) ->
   id = "new"
   if $routeParams.id
@@ -19,7 +16,7 @@ m.controller "MailEditController", (
     $scope.selectItem $scope.items[0].id if $scope.items.length
     return
   )
-  $scope.stripScripts = StripScripts
+  $scope.stripScripts = (a) -> a # TODO(ark): use $sce sanitize thing
 
   goToMail = ->
     $timeout(

@@ -1,5 +1,4 @@
-"use strict"
-m = angular.module("userServices", [ "ngResource" ])
+m = require "./header_module.coffee"
 
 m.factory "User", ($resource) ->
   $resource "data/user/user.json", {}, {}

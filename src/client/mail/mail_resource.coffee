@@ -1,4 +1,4 @@
-m = angular.module "mailServices"
+m = require "./mail_module"
 
 m.factory "MailFeed", ($resource) ->
   $resource "/data/mail/feed.json?id=:id", { id: "@id" }, {}

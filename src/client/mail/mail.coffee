@@ -1,5 +1,4 @@
-"use strict"
-m = angular.module "mailServices", [ "ngResource" ]
+m = require "./mail_module"
 
 m.factory "MailFeed", ($resource) ->
   $resource "/data/mail/feed.json?id=:id", { id: "@id" }, {}
@@ -25,7 +24,6 @@ m.controller "MailCtrl", (
   $timeout
   MailFeed
   MailFeedItem
-  StripScripts
 ) ->
   id = "new"
   if $routeParams.id
@@ -36,7 +34,6 @@ m.controller "MailCtrl", (
     $scope.selectItem $scope.items[0].id if $scope.items.length
     return
   )
-  $scope.stripScripts = StripScripts
 
   $scope.update = ->
     console.log("Saving")
