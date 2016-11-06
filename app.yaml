@@ -9,10 +9,6 @@ inbound_services:
 - mail
 
 handlers:
-- url: /js
-  static_dir: assets/js
-  login: admin
-
 - url: /assets
   static_dir: assets
   login: admin
@@ -28,8 +24,8 @@ handlers:
   login: admin
 
 - url: /favicon.ico
-  static_files: static/rss.png
-  upload: static/rss.png
+  static_files: assets/rss.png
+  upload: assets/rss.png
 
 - url: /.*
   script: main.app

@@ -9,6 +9,8 @@ assets =
   include: [
     "*.yaml"
     "src/server/**/*"
+  ]
+  assets: [
     "src/client/**/*"
   ]
   exclude: [
@@ -34,6 +36,7 @@ handleError = ->
 
 gulp.task "default", ["slm", "coffee", "css", "vendor"], ->
   gulp.src(assets.include).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(dirs.destination))
+  gulp.src(assets.assets).pipe(ignore.exclude(assets.exclude)).pipe(gulp.dest(dirs.assets))
 
 gulp.task "slm", ->
   gulp.src("src/client/**/*.slim")

@@ -18,7 +18,14 @@ m.factory "MailFeedItem", ($resource) ->
     }
   )
 
-m.controller "MailCtrl", ($scope, $routeParams, $location, MailFeed, MailFeedItem) ->
+m.controller "MailCtrl", (
+  $scope
+  $routeParams
+  $location
+  MailFeed
+  MailFeedItem
+  StripScripts
+) ->
   id = "new"
   if $routeParams.id
     id = $routeParams.id
@@ -28,7 +35,7 @@ m.controller "MailCtrl", ($scope, $routeParams, $location, MailFeed, MailFeedIte
     $scope.selectItem $scope.items[0].id
     return
   )
-  $scope.stripScripts = stripScripts
+  $scope.stripScripts = StripScripts
 
   $scope.update = ->
     $scope.feed.$save (ans) ->
