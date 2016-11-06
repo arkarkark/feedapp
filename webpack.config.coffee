@@ -17,10 +17,6 @@ module.exports =
       test: /\.coffee$/
       exclude: /node_modules/
       loader: "coffeelint-loader"
-    }, {
-      test: /\.coffee$/
-      exclude: /node_modules/
-      loader: "baggage?[file].html&[file.css]"
     }]
     loaders: [
       {test: /\.css$/, 				loader: "style!css"}
