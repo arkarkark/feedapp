@@ -11,7 +11,8 @@ module.exports =
   resolve:
     extensions: ["", ".js", ".json", ".coffee"]
   # This is Webpack's cryptic way to get sourcemaps running
-  devtool: "#cheap-module-eval-source-map",
+  # devtool: "#cheap-module-eval-source-map",
+  devtool: "#inline-source-map",
   module:
     preLoaders: [{
       test: /\.coffee$/
@@ -19,8 +20,9 @@ module.exports =
       loader: "coffeelint-loader"
     }]
     loaders: [
-      {test: /\.css$/, 				loader: "style!css"}
-      {test: /\.coffee$/, 		loader: "ng-annotate-loader!coffee-loader"}
-      {test: /index\.slim$/,	loader: "html!slm"}
-      {test: /default\.slim$/, 			loader: "ngtemplate!html!slm"}
+      {test: /\.coffee$/, 		loaders: ["ng-annotate-loader", "coffee-loader"]}
+      {test: /\.png$/,				loaders: ["file?name=[name].[ext]"]}
+      {test: /\.scss$/, 			loaders: ["style", "css?sourceMap", "sass?sourceMap"]}
+      {test: /\.slim$/, 			loaders: ["ngtemplate", "html", "slm"], exclude: /index\.slim$/}
+      {test: /index\.slim$/,	loaders: ["file?name=[name].html", "extract", "html", "slm"]}
     ]

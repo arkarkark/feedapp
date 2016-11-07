@@ -1,10 +1,10 @@
-require "./index.slim"
-
 angular = require "angular"
-
 require "angular-route"
 
-console.log("SLIM", require "./default.slim")
+require "./index.slim"
+require "./index.scss"
+require "./rss.png"
+defaultTemplate = require "./default.slim"
 
 m = angular.module "feedapp", [
   "ngRoute"
@@ -18,7 +18,7 @@ m.config ($routeProvider) ->
   $routeProvider
     .when(
       "/"
-      templateUrl: require "./default.slim"
+      templateUrl: defaultTemplate
     ).when(
       "/blogger"
       templateUrl: "assets/static/blogger-list.html"
@@ -33,12 +33,6 @@ m.config ($routeProvider) ->
     ).when("/expand/edit/:id",
       templateUrl: "assets/static/expand-edit.html"
       controller: "ExpandCtrl"
-    ).when("/mail",
-      templateUrl: "/assets/mail/mail.html"
-      controller: "MailCtrl"
-    ).when("/mail/edit/:id",
-      templateUrl: "/assets/mail/mail_edit.html"
-      controller: "MailEditController"
     ).otherwise "/"
   return
 
