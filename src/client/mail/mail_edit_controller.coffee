@@ -41,8 +41,8 @@ m.controller "MailEditController", (
   $scope.selectItem = (itemId) ->
     $scope.item = MailFeedItem.get(
       id: itemId
-      parent_id: id)
-    return
+      parent_id: id
+    )
 
   $scope.tombstoneItem = ->
     $scope.item.$tombstone()

@@ -9,7 +9,7 @@ App Engine RSS Feed maker
 1. install the cloud sdk if you don't have it.
    1. [https://cloud.google.com/sdk/docs/](https://cloud.google.com/sdk/docs/)
    1. gcloud components install app-engine-python
-1. `make setup`
-1. `make test`
-1. `make dev` to see if it works
-1. `make install` to see if it works
+1. `./setup.sh`
+1. `npm test`
+1. `npm run dev` to see if it works
+1. `npm run install` to push to production

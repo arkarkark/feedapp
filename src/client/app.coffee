@@ -1,5 +1,6 @@
 angular = require "angular"
 require "angular-route"
+require "angular-sanitize"
 
 require "./index.slim"
 require "./index.scss"
@@ -8,6 +9,7 @@ defaultTemplate = require "./default.slim"
 
 m = angular.module "feedapp", [
   "ngRoute"
+  "ngSanitize"
   require("./header_module").name
   require("./mail/mail_module").name
   # "expandServices"

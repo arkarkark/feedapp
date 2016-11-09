@@ -13,8 +13,8 @@ table ng-show="items.length"
     td style=("vertical-align:text-top;\nwhite-space: nowrap; overflow: hidden; max-width: 200px;")
       div ng-repeat=("item in items")
         a ng-click="selectItem(item.id)" title="{{item.subject}}" {{item.subject}}
-    td style="vertical-align:text-top;"
+    td style="vertical-align:text-top; width: 400px;"
       div ng-hide="item"  &lt;-Click an item title on the left.
       div ng-show="item"
         button ng-click="tombstoneItem()"  Tombstone
-      div ng-bind-html-unsafe="stripScripts(item.body)"
+      div ng-bind-html="item.body"

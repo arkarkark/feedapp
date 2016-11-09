@@ -47,28 +47,31 @@ class EmailToFeed(InboundMailHandler):
 
   def post(self, name):
     """Transforms body to email request."""
-    self.receive(mail.InboundEmailMessage(self.request.body),
-                 urllib.unquote(name))
-
-  def receive(self, mail_message, name):
 
     try:
-      name = name.split('@')[0]
+      name = urllib.unquote(name).split('@')[0]
     except:
       pass
 
     # get the feed object
     feed = MailFeed.query(MailFeed.name == name).get()
+    if feed is not None:
+      self.receive(mail.InboundEmailMessage(self.request.body), feed)
+    else:
+      # 404 ?
+      pass
+
+  def receive(self, mail_message, feed):
 
     body = mail_message.bodies().next()[1].decode()
     logging.info("Body is : %r", body)
 
-    item = MailFeedItem(parent=feed,
+    item = MailFeedItem(parent=feed.key,
                         subject=mail_message.subject,
                         body=body)
     item.put()
 
-    logging.info("Added a message for: " + name)
+    logging.info("Added a message for: " + feed.name)
 
 class FeedFromEmail(webapp.RequestHandler):
   """output a feed for a given name."""
@@ -145,7 +148,7 @@ class SetupDemo(webapp.RequestHandler):
       f.close()
       # now inject this into the code where we process emails.
       msg = InboundEmailMessage(body)
-      etf.receive(msg, name)
+      etf.receive(msg, feed)
     self.response.out.write('<p><button onClick="history.back()">' +
                             'DONE</button></p>')
 
