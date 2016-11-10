@@ -1,5 +1,3 @@
-angular = require "angular"
-
 module.exports = m = angular.module "mailServices", [ "ngResource" ]
 
 mailTemplate = require "./mail.slim"

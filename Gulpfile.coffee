@@ -28,7 +28,15 @@ handleError = ->
 gulp.task "default", ["webpack:build"], ->
   gulp.src(source.include).pipe(gulp.dest(dirs.destination))
 
-gulp.task "webpack:build", ->
+gulp.task "webpack:build", ["webpack:build:vendor", "webpack:build:app"]
+
+gulp.task "webpack:build:vendor", ->
+  gulp
+    .src("src/client/vendor.coffee")
+    .pipe(webpack(require("./webpack.vendor.config.coffee")))
+    .pipe(gulp.dest(dirs.assets))
+
+gulp.task "webpack:build:app", ->
   gulp
     .src("src/client/app.coffee")
     .pipe(webpack(require("./webpack.config.coffee")))
@@ -36,4 +44,4 @@ gulp.task "webpack:build", ->
 
 gulp.task "watch", ->
   watch(source.include).pipe(gulp.dest(dirs.destination))
-  gulp.watch(source.webpack, ["webpack:build"])
+  gulp.watch(source.webpack, ["webpack:build:app"])

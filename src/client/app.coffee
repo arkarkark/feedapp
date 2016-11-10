@@ -1,7 +1,3 @@
-angular = require "angular"
-require "angular-route"
-require "angular-sanitize"
-
 require "./index.slim"
 require "./index.scss"
 require "./rss.png"
