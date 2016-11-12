@@ -8,12 +8,33 @@ html ng-app="feedapp"
     script src="/assets/bundle.vendor.js"
     script src="/assets/bundle.js"
   body
-    #header ng-controller="HeaderCtrl"
+    md-toolbar.md-hue-2 ng-controller="HeaderCtrl"
+      .md-toolbar-tools
+        md-menu md-offset="0 45"
+          md-button ng-click="$mdOpenMenu()" File
+          md-menu-content
+            md-menu-item
+              md-button Share...
+            md-menu-devider
+            md-menu-item
+              md-button Whut
+        h2
+          a href="/" Feed App
+        span [flex]
+        span ng-show="user.username"
+          md-menu md-offset="0 45"
+            md-button ng-click="$mdOpenMenu()" ng-bind="user.username || Login"
+            md-menu-content
+              md-menu-item
+                md-button Logout
+        div ng-hide="user.username"
+          button ng-href=("{{ user.loginUrl }}")  Login
+
+    / #header
       .left
         a href="/"  Feed App
       .right
         span ng-show="user.username"
           span ng-bind="user.username"
           a ng-href="{{user.logoutUrl}}"  Logout
-        a ng-hide="user.username" ng-href=("{{ user.loginUrl }}")  Login
-    div [ng-view]
+    md-content.page-container [ng-view]

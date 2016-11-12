@@ -4,6 +4,7 @@ require "./rss.png"
 defaultTemplate = require "./default.slim"
 
 m = angular.module "feedapp", [
+  "ngMaterial"
   "ngRoute"
   "ngSanitize"
   require("./header_module").name

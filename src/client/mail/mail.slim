@@ -1,12 +1,12 @@
-table
-  tr
-    th Name
-    th Feed
-    td
-      a href="/mail/edit/new"  Add...
-  tr ng-repeat=["feed in feeds"]
-    td ng-bind="feed.name"
-    td
-      a target="_blank" ng-href="/mailfeed/{{feed.name}}"  feed
-    td
-      a ng-href="/mail/edit/{{feed.id}}"  edit
+md-list
+  md-list-item.md-2-line ng-repeat=["feed in feeds"]
+    .md-list-item-text layout="column"
+      div layout="row"
+        md-button ng-disabled="true" ng-bind="feed.name"
+        md-button
+          a target="_blank" ng-href="/mailfeed/{{feed.name}}" feed
+
+        md-button
+          a ng-href="/mail/edit/{{feed.id}}"  edit
+
+      md-divider ng-if="!$last"
