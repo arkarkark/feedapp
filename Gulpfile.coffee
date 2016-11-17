@@ -9,6 +9,7 @@ webpack = require "webpack-stream"
 source =
   include: [
     "*.yaml"
+    "client_secrets.json"
     "testdata*/**/*"
     "src/server/**/*"
   ]

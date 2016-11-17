@@ -5,8 +5,10 @@ import pickle
 import re
 import json
 
-import oauth
+import auth
 import sanitizeblogger
+
+import bloggerclient
 
 from google.appengine.api import users
 from google.appengine.ext import db
@@ -30,63 +32,45 @@ class AuthedFeed(WtwfModel):
   # automatic fields
   created = db.DateTimeProperty(auto_now_add=True)
 
-class BloggerHandler(oauth.OAuthHandler):
+class BloggerHandler(wtwfhandler.WtwfHandler):
   """Used to make sure we have an oauth token."""
 
+  @auth.decorator.oauth_required
   def get(self):
-    if self.client.has_access_token():
-      self.redirect('/#/blogger/')
-      return
-
-    user = users.get_current_user()
-    if user:
-      access_url = '/oauth/request_token'
-    else:
-      access_url = users.create_login_url('/oauth/request_token')
-    self.redirect(access_url)
-
-
+    self.redirect('/blogger/')
 
 class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
   """Main handler. If user is not logged in via OAuth it will display welcome
   page. In other case user's blogs on Blogger will be displayed."""
 
-  def initOauth(self):
-    """Set up self.client with the oauth stuff from this request."""
-
-    self.client = oauth.OAuthClient(self)
-    url = 'http://www.blogger.com/feeds/'
-    self.oauth_token = self.client.blogger.token_store.find_token(url)
-    self.client.blogger.override_token = self.oauth_token
-
   def get(self):
     self.AssertAllowed()
 
-    self.initOauth()
+    blogger = bloggerclient.BloggerClient(auth.decorator)
+
     authed_feeds = AuthedFeed.all()
     authed_feeds = dict(zip([x.blog_id for x in authed_feeds], authed_feeds))
 
-    feed = self.client.blogger.GetBlogFeed()
+    blogList = blogger.blogsListByUser()
     blogs = []
-    for entry in feed.entry:
-      blog_id = entry.GetBlogId()
+    for entry in blogList.items:
       blog = {
-        'blog_id': blog_id,
-        'title': entry.title.text,
-        'link': entry.GetHtmlLink().href,
-        'published': entry.published.text,
-        'updated': entry.updated.text,
-        # 'all': [x for x in dir(entry) if not x.startswith('_')],
+        'blog_id': entry.id,
+        'title': entry.name,
+        'link': entry.url,
+        'published': entry.published,
+        'updated': entry.updated,
         'feed_button': 'Create',
-        }
-      if int(blog_id) in authed_feeds:
-        authed_feed = authed_feeds[int(blog_id)]
+      }
+      authed_feed = authed_feeds.get(int(entry.id))
+
+      if authed_feed:
         blog.update({
-            'name': authed_feed.name,
-            'redirect_url': authed_feed.redirect_url,
-            'tombstone_days_older': authed_feed.tombstone_days_older,
-            'keep_first': authed_feed.keep_first,
-            'feed_button': 'Edit'})
+          'name': authed_feed.name,
+          'redirect_url': authed_feed.redirect_url,
+          'tombstone_days_older': authed_feed.tombstone_days_older,
+          'keep_first': authed_feed.keep_first,
+          'feed_button': 'Edit'})
       blogs.append(blog)
     self.response.out.write(json.dumps(blogs, default=wtwfhandler.JsonPrinter))
 
@@ -111,7 +95,7 @@ class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
                                        default=wtwfhandler.JsonPrinter))
 
 
-class GetFeedHandler(oauth.OAuthHandler):
+class GetFeedHandler(wtwfhandler.WtwfHandler):
   """Main handler. If user is not logged in via OAuth it will display welcome
   page. In other case user's blogs on Blogger will be displayed."""
 

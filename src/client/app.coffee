@@ -9,6 +9,7 @@ m = angular.module "feedapp", [
   "ngSanitize"
   require("./header_module").name
   require("./mail/mail_module").name
+  require("./blogger/blogger_module").name
   # "expandServices"
   # "bloggerServices"
 ]
@@ -18,14 +19,6 @@ m.config ($routeProvider) ->
     .when(
       "/"
       templateUrl: defaultTemplate
-    ).when(
-      "/blogger"
-      templateUrl: "assets/static/blogger-list.html"
-      controller: "BloggerCtrl"
-    ).when(
-      "/blogger/edit/:blog_id",
-      templateUrl: "assets/static/blogger-edit.html"
-      controller: "BloggerCtrl"
     ).when("/expand",
       templateUrl: "assets/static/expand-list.html"
       controller: "ExpandCtrl"

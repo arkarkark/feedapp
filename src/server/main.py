@@ -12,19 +12,18 @@ from google.appengine.ext import vendor
 
 vendor.add('lib')
 
-# import oauth
-# import blogger
-import expand
-import mail
-
 from google.appengine.ext import webapp
 
 from wtwf import wtwfhandler
 from crud import crud_handler
 
+import blogger
+import expand
+import mail
+import auth
+
 app = webapp.WSGIApplication([
-  # (r'/oauth/(.*)', oauth.OAuthDanceHandler),
-  # ('/blogger', blogger.BloggerHandler),
+  ('/bloggeroauth', blogger.BloggerHandler),
   # (r'/feed/([a-zA-Z0-9_-]+)', blogger.GetFeedHandler),
   (r'/mailfeed/([a-zA-Z0-9_-]+)', mail.FeedFromEmail),
   ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),
@@ -36,4 +35,5 @@ app = webapp.WSGIApplication([
   ('/data/user/user.json', wtwfhandler.UserHandler),
   ('/admin/setupdemo', mail.SetupDemo),
   (r'/_ah/mail/(.+)', mail.EmailToFeed),
+  (auth.decorator.callback_path, auth.decorator.callback_handler())
 ])
