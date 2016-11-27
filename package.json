@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "clean": "bash -c 'rm -rfv dist'",
-    "dev": "rm -rfv dist/[^l]*; ./node_modules/.bin/gulp; ./node_modules/.bin/gulp watch & cd dist; dev_appserver.py --host=0.0.0.0 --port 6724 .",
-    "release": "./node_modules/.bin/gulp; cd dist; gcloud --quiet app --project feedappywtwf deploy --version=2",
+    "deploy": "./setup.sh; cd dist; gcloud --quiet app --project feedappywtwf deploy --version=2",
+    "dev": "rm -rfv dist/[^l]*; ./setup.sh; ./node_modules/.bin/gulp watch & cd dist; dev_appserver.py --host=0.0.0.0 --port 6724 .",
     "setup": "./setup.sh",
     "test": "bash -c 'for fil in *_test.py; do $fil; done'"
   },

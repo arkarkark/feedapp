@@ -63,12 +63,24 @@ class EmailToFeed(InboundMailHandler):
 
   def receive(self, mail_message, feed):
 
-    body = mail_message.bodies().next()[1].decode()
-    logging.info("Body is : %r", body)
+    sender = mail_message.sender
 
-    item = MailFeedItem(parent=feed.key,
-                        subject=mail_message.subject,
-                        body=body)
+    if sender:
+      # strip it just to the domain name
+      try:
+        sender = sender.split("@")[1].split(".")[-2]
+      except IndexError:
+        pass
+
+    subject = mail_message.subject
+    if sender:
+      subject = ": ".join([sender, subject])
+    body = mail_message.bodies().next()[1].decode()
+
+    logging.info("Subject is : %r", subject)
+    logging.debug("Body is : %r", body)
+
+    item = MailFeedItem(parent=feed.key, subject=subject, body=body)
     item.put()
 
     logging.info("Added a message for: " + feed.name)

@@ -4,7 +4,9 @@ if [ ! -d dist/lib ]; then
     mkdir -p dist/lib
 fi
 
-pip install -t dist/lib google-api-python-client
+if [ ! -e dist/lib/googleapiclient ]; then
+    pip install -t dist/lib google-api-python-client
+fi
 
 if [ ! -e dist/lib/PyRSS2Gen.py ]; then
   if [ ! -d dist/lib/PyRSS2Gen-1.1 ]; then
