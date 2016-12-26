@@ -9,27 +9,31 @@ inbound_services:
 - mail
 
 handlers:
+- url: /_ah/mail/.+
+  script: main.app
+  login: admin
+
+- url: /data/.*
+  script: main.app
+  login: admin
+
+- url: /public/data/.*
+  script: main.app
+  login: optional
+
+- url: /mailfeed/.*
+  script: main.app
+  login: optional
+
+- url: /oauth.*
+  script: main.app
+  login: admin
+
 - url: /assets
   static_dir: assets
   login: admin
 
-- url: /
-  static_files: assets/index.html
-  upload: assets/index.html
-  login: admin
-
-- url: /mail($|/.*)
-  static_files: assets/index.html
-  upload: assets/index.html
-  login: admin
-
-- url: /favicon.ico
-  static_files: assets/rss.png
-  upload: assets/rss.png
-
 - url: /.*
-  script: main.app
-
-- url: /_ah/mail/.+
-  script: main.app
+  static_files: assets/index.html
+  upload: assets/index.html
   login: admin

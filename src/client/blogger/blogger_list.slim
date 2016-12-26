@@ -1,0 +1,25 @@
+div ng-show="loading" Loading...
+div ng-hide="loading"
+  table
+    tr
+      th
+        p Your blogs:
+      th Url
+      th
+    tr ng-repeat=("blog in blogs")
+      td  ng-bind="blog.title"
+      td
+        a target="_blank" ng-href="{{blog.url}}" ng-bind="blog.url"
+      td
+        a target="_blank" ng-href="/public/data/blogger/feed/{{blog.name}}" ng-show="blog.name" feed
+      td
+        a ng-href="/blogger/edit/{{blog.blog_id}}" {{blog.feed_button}}
+    tr
+      td
+        i Add Blog by URL
+      td
+        input type="url" ng-model="byUrl" style="width: 100%" placeholder="blog url"
+      td
+        input size="8" type="name" ng-model="name" placeholder="name"
+      td
+        a ng-click="addByUrl(byUrl, name)" Create

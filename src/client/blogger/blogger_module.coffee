@@ -1,10 +1,9 @@
 module.exports = m = angular.module "bloggerServices", ["ngResource"]
 
-bloggerListTemplate = require "./blogger-list.slim"
+bloggerListTemplate = require "./blogger_list.slim"
 bloggerListController = require "./blogger_list_controller"
 
-bloggerEditTemplate = require "./blogger-edit.slim"
-
+bloggerEditTemplate = require "./blogger_edit.slim"
 
 m.config ($routeProvider) ->
   $routeProvider

@@ -23,17 +23,17 @@ import mail
 import auth
 
 app = webapp.WSGIApplication([
-  ('/bloggeroauth', blogger.BloggerHandler),
-  # (r'/feed/([a-zA-Z0-9_-]+)', blogger.GetFeedHandler),
+  ('/data/blogger/oauth', blogger.BloggerHandler),
+  ('/data/blogger/blog', blogger.BloggerDataHandler),
+  (r'/public/data/blogger/feed/(\w+)', blogger.GetFeedHandler),
   (r'/mailfeed/([a-zA-Z0-9_-]+)', mail.FeedFromEmail),
-  ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),
-  # ('/data/blogger/feed.json', blogger.BloggerDataHandler),
-  ('/data/expand/feed.json', crud_handler.GetCrudHandler(expand.ExpandFeed)),
-  ('/data/expand/item.json', expand.ExpandItemDataHandler),
+  # ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),
+  # ('/data/expand/feed.json', crud_handler.GetCrudHandler(expand.ExpandFeed)),
+  # ('/data/expand/item.json', expand.ExpandItemDataHandler),
   ('/data/mail/feed.json', crud_handler.GetCrudHandler(mail.MailFeed)),
   ('/data/mail/item.json', mail.MailItemDataHandler),
   ('/data/user/user.json', wtwfhandler.UserHandler),
-  ('/admin/setupdemo', mail.SetupDemo),
+  ('/data/setupdemo', mail.SetupDemo),
   (r'/_ah/mail/(.+)', mail.EmailToFeed),
   (auth.decorator.callback_path, auth.decorator.callback_handler())
 ])
