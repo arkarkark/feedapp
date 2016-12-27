@@ -60,6 +60,7 @@
     "sass-loader": "4.0.2",
     "slm-loader": "0.2.3",
     "style-loader": "0.13.1",
+    "underscore": "^1.8.3",
     "url-loader": "0.5.7",
     "webpack": "1.13.3",
     "webpack-dev-server": "1.16.2",

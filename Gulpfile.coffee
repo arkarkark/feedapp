@@ -34,13 +34,13 @@ gulp.task "webpack:build", ["webpack:build:vendor", "webpack:build:app"]
 gulp.task "webpack:build:vendor", ->
   gulp
     .src("src/client/vendor.coffee")
-    .pipe(webpack(require("./webpack.vendor.config.coffee")))
+    .pipe(webpack(require("./webpack.config.feedapp.vendor.coffee")))
     .pipe(gulp.dest(dirs.assets))
 
 gulp.task "webpack:build:app", ->
   gulp
     .src("src/client/app.coffee")
-    .pipe(webpack(require("./webpack.config.coffee")))
+    .pipe(webpack(require("./webpack.config.feedapp.coffee")))
     .pipe(gulp.dest(dirs.assets))
 
 gulp.task "watch", ->

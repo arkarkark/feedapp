@@ -87,6 +87,14 @@ class BloggerHandler(wtwfhandler.WtwfHandler):
 
   @auth.decorator.oauth_required
   def get(self):
+    credentials = auth.decorator.credentials
+    if credentials.refresh_token is None:
+      logging.error("Got credentials with no refresh_token. "
+                    "Flush memcache and remove all CredentialsModel from the datastore and try again.")
+      return self.error(500)
+    else:
+      logging.info("credentials look good")
+
     self.redirect('/blogger/')
 
 def blogObjectFromBlog(entry):
@@ -167,12 +175,19 @@ class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
       if not authed_feed:
         name = req.name or blog.url
         name = re.sub(r'(http://|www\.|\.com|\.blogspot|\W)', '', name)
+
+        credentials = auth.decorator.credentials
+        if credentials.refresh_token is None:
+          logging.error("Trying to store AuthedFeed credentials with no refresh_token. "
+                        "Flush memcache and remove all CredentialsModel from the datastore and try again.")
+          return self.error(500)
+
         authed_feed = AuthedFeed(
           blog_id=long(req.blog_id),
           name=name,
           title=req.title,
           url=blog.url,
-          credentials = auth.decorator.credentials,
+          credentials=credentials,
         )
 
     if authed_feed is None:
@@ -203,7 +218,7 @@ class GetFeedHandler(wtwfhandler.WtwfHandler):
       title=blog.title,
     )
 
-    for post in blog.posts["items"]:
+    for post in posts:
       post = JsonStruct.fromDict(post)
 
       # TODO sanitize per the keep_fisrt and tombstone_days_older settings

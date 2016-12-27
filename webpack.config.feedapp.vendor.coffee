@@ -2,6 +2,7 @@ SOURCE = __dirname + "/src"
 DEST   = __dirname + "/dist/assets"
 
 module.exports =
+  context: SOURCE
   entry:
     vendor: [
       "angular"
@@ -13,6 +14,7 @@ module.exports =
       "angular-resource"
       "angular-route"
       "angular-sanitize"
+      "./client/vendor.coffee"
     ]
   output:
     path: DEST
@@ -20,6 +22,7 @@ module.exports =
   devtool: "#cheap-module-eval-source-map",
   module:
     loaders: [
+      {test: /\.coffee$/, 		loaders: ["ng-annotate-loader", "coffee-loader"]}
       {test: /\.css$/, 			  loaders: ["style", "css?sourceMap"]}
         # {test: /\.woff$/,   		loaders: ["url-loader?limit=10000&minetype=application/font-woff"]}
         # {test: /\.woff2$/,      loaders: ["url?limit=10000"]}

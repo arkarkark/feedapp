@@ -10,6 +10,8 @@ module.exports = ($scope, Blogger) ->
     console.log("Adding by url", url)
     blog = new Blogger(blog_url: url, name: name)
     blog.$save (blog) ->
+      $scope.byUrl = ""
+      $scope.name = ""
       existing = _.findWhere($scope.blogs, blog_id: blog.blog_id)
       if existing
         console.log("Updating existing\n", JSON.stringify(existing), "\n", JSON.stringify(blog))

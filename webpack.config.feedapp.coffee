@@ -4,7 +4,7 @@ DEST   = __dirname + "/dist/assets"
 module.exports =
   context: SOURCE
   entry:
-    app: ["./client/app.coffee"]
+    app: ["./client/feedapp.coffee"]
   output:
     path: DEST
     filename: "bundle.js"
