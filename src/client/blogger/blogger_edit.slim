@@ -1,26 +1,27 @@
-table
-  tr
-    td Blog:
-    td
-      a href="{{blog.link}}"
-        | {{ blog.title })
-  tr
-    td created:
-    td  { blog.published }
-  tr
-    td last updated:
-    td  { blog.updated }
-  tr
-    td Name:
-    td
-      input ng-model="blog.name" type="text" /
-  tr
-    td Tombstone:
-    td
-      input ng-model="blog.tombstone_days_older" type="text" /
-      | (delete content for posts older than this many days old)
-  tr
-    td Keep This many Posts:
-    td
-      input ng-model="blog.keep_first" type="text" /
-input ng-click="update()" type="submit" value="Update" /
+div ng-show="loading" Loading...
+div ng-hide="loading"
+  table
+    tr
+      td Blog:
+      td
+        a href="{{blog.link}}" ng-bind="blog.title"
+    tr
+      td created:
+      td ng-bind="blog.published"
+    tr
+      td last updated:
+      td ng-bind="blog.updated"
+    tr
+      td Name:
+      td
+        input ng-model="blog.name" type="text"
+    tr
+      td Tombstone:
+      td
+        input ng-model="blog.tombstone_days_older" type="number"
+        | (delete content for posts older than this many days old)
+    tr
+      td Keep This many Posts:
+      td
+        input ng-model="blog.keep_first" type="number"
+  input ng-click="update(blog)" type="submit" value="Update"

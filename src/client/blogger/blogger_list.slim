@@ -13,7 +13,8 @@ div ng-hide="loading"
       td
         a target="_blank" ng-href="/public/data/blogger/feed/{{blog.name}}" ng-show="blog.name" feed
       td
-        a ng-href="/blogger/edit/{{blog.blog_id}}" {{blog.feed_button}}
+        a ng-href="/blogger/edit/{{blog.blog_id}}" ng-show="blog.name" Edit
+        a ng-click="create(blog)" ng-hide="blog.name" Create
     tr
       td
         i Add Blog by URL
