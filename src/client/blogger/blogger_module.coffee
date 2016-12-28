@@ -1,5 +1,7 @@
 module.exports = m = angular.module "bloggerServices", ["ngResource"]
 
+m.service "Blogger", require "./blogger_resource"
+
 bloggerListTemplate = require "./blogger_list.slim"
 bloggerListController = require "./blogger_list_controller"
 

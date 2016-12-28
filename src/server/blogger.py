@@ -2,13 +2,11 @@ import collections
 import datetime
 import json
 import logging
-import pickle
 import random
 import re
 import string
 
 import auth
-import sanitizeblogger
 import oauth2client
 import httplib2
 
@@ -16,7 +14,6 @@ import PyRSS2Gen as rss
 
 import googleapiclient.discovery
 
-from google.appengine.api import users
 from google.appengine.ext import ndb
 from wtwf import wtwfhandler
 
@@ -54,7 +51,7 @@ class JsonStruct:
       d = d.__dict__
     self.__dict__.update(d)
     return self
-  def toDict(self):
+  def dict(self):
     return self.__dict__
 
 class AuthedFeed(ndb.Model):
@@ -109,6 +106,16 @@ class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
   def get(self):
     self.AssertAllowed()
 
+    blog_id = self.request.params.get("blog_id")
+    if blog_id:
+      afeed = AuthedFeed.query(AuthedFeed.blog_id == long(blog_id)).get()
+      if afeed:
+        self.response.headers['Content-Type'] = 'text/json'
+        self.response.out.write(json.dumps(afeed.to_json_object()))
+      else:
+        self.error(404)
+      return
+
     blogs = []
 
     authed_feeds = AuthedFeed.query()
@@ -130,7 +137,7 @@ class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
       if authed_feed:
         del authed_feeds[blog.blog_id]
         blog.update(authed_feed.to_json_object())
-      blogs.append(blog.toDict())
+      blogs.append(blog.dict())
 
     logging.info('leftover authed feeds %r', len(authed_feeds))
 
@@ -148,59 +155,59 @@ class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
 
     authed_feed = None
 
-    if req.id:
-      authed_feed = authed_feeds.get(req.id)
+    if req.blog_id:
+      authed_feed = AuthedFeed.query(AuthedFeed.blog_id == long(req.blog_id)).get()
     else:
-      if req.blog_id:
-        authed_feed = AuthedFeed.query(AuthedFeed.blog_id == long(req.blog_id)).get()
-      else:
-        # get it from the blogger api
-        if req.url is None:
-          return self.error(422)
-        blogger = getBlogger()
-        blog = JsonStruct.fromDict(dict(blogger.blogs().getByUrl(url=req.url).execute()))
-        if blog.is_empty():
-          return self.error(404)
-        req.blog_id = blog.id
-        req.title = blog.name
-        authed_feed = AuthedFeed.query(AuthedFeed.blog_id == long(req.blog_id)).get()
-      if not authed_feed:
-        if not req.name:
-          req.name = re.sub(r'(http://|blog\.|www\.|\.com|\.blogspot|\W)', '', req.url) + '_'
-          req.name += ''.join(random.SystemRandom().choice(string.letters + string.digits) for _ in range(8))
+      # get it from the blogger api
+      if req.url is None:
+        return self.error(422)
+      blogger = getBlogger()
+      blog = JsonStruct.fromDict(dict(blogger.blogs().getByUrl(url=req.url).execute()))
+      if blog.is_empty():
+        return self.error(404)
+      req.blog_id = blog.id
+      req.title = blog.name
+      authed_feed = AuthedFeed.query(AuthedFeed.blog_id == long(req.blog_id)).get()
+    if not authed_feed:
+      if not req.name:
+        req.name = re.sub(r'(http://|blog\.|www\.|\.com|\.blogspot|\W)', '', req.url) + '_'
+        req.name += ''.join(random.SystemRandom().choice(string.letters + string.digits) for _ in range(8))
 
-        credentials = auth.decorator.credentials
-        if credentials.refresh_token is None:
-          logging.error('Trying to store AuthedFeed credentials with no refresh_token. '
-                        'Flush memcache and remove all CredentialsModel from the datastore and try again.')
-          return self.error(500)
+      credentials = auth.decorator.credentials
+      if credentials.refresh_token is None:
+        logging.error('Trying to store AuthedFeed credentials with no refresh_token. '
+                      'Flush memcache and remove all CredentialsModel from the datastore and try again.')
+        return self.error(500)
 
-        authed_feed = AuthedFeed(
-          blog_id=long(req.blog_id),
-          name=req.name,
-          title=req.title,
-          url=req.url,
-          credentials=credentials,
-        )
+      authed_feed = AuthedFeed(
+        blog_id=long(req.blog_id),
+        name=req.name,
+        title=req.title,
+        url=req.url,
+        credentials=credentials,
+      )
 
     if authed_feed is None:
       return self.error(404)
+
+    for key, value in req.dict().items():
+      setattr(authed_feed, key, value)
     authed_feed.put()
     req.update(authed_feed.to_json_object())
-    logging.info('found id %r in %r', id, req.to_json())
 
     self.response.out.write(req.to_json())
 
-
-class BloggerItemDataHandler(wtwfhandler.WtwfHandler):
-
-  def get(self, blog_id):
+  def delete(self):
     self.AssertAllowed()
-    afeed = AuthedFeed.query(AuthedFeed.blog_id == long(blog_id)).get()
-    self.response.headers['Content-Type'] = 'text/json'
-    self.response.out.write(json.dumps(afeed.to_json_object()))
 
+    blog_id = self.request.params.get("blog_id")
+    if blog_id:
+      afeed = AuthedFeed.query(AuthedFeed.blog_id == long(blog_id)).get()
+      if afeed:
+        afeed.key.delete()
+        return
 
+    self.error(404)
 
 class GetFeedHandler(wtwfhandler.WtwfHandler):
   """Get the RSS feed for an AuthedFeed."""

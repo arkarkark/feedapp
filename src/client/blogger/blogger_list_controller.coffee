@@ -1,7 +1,3 @@
-m = require "./blogger_module"
-
-require "./blogger_resource"
-
 module.exports = ($scope, Blogger) ->
   $scope.loading = true
   $scope.blogs = Blogger.query -> $scope.loading = false

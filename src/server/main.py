@@ -25,7 +25,6 @@ import auth
 app = webapp.WSGIApplication([
   ('/data/blogger/oauth', blogger.BloggerHandler),
   ('/data/blogger/blog', blogger.BloggerDataHandler),
-  ('/data/blogger/blog/([0-9]+)', blogger.BloggerItemDataHandler),
   (r'/public/data/blogger/feed/(\w+)', blogger.GetFeedHandler),
   (r'/mailfeed/([a-zA-Z0-9_-]+)', mail.FeedFromEmail),
   # ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),

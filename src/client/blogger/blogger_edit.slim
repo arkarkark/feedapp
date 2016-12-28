@@ -6,12 +6,6 @@ div ng-hide="loading"
       td
         a href="{{blog.link}}" ng-bind="blog.title"
     tr
-      td created:
-      td ng-bind="blog.published"
-    tr
-      td last updated:
-      td ng-bind="blog.updated"
-    tr
       td Name:
       td
         input ng-model="blog.name" type="text"
@@ -24,4 +18,5 @@ div ng-hide="loading"
       td Keep This many Posts:
       td
         input ng-model="blog.keep_first" type="number"
-  input ng-click="update(blog)" type="submit" value="Update"
+  button ng-click="update(blog)" Update
+  button ng-click="delete(blog)" Delete
