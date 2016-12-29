@@ -1,4 +1,5 @@
 module.exports = ($scope, Blogger) ->
+  $scope.sort = "title"
   $scope.loading = true
   $scope.blogs = Blogger.query -> $scope.loading = false
 
@@ -20,3 +21,17 @@ module.exports = ($scope, Blogger) ->
         $scope.blogs.push(blog)
 
     return promise
+
+  $scope.setSort = (thing) ->
+    b = $scope.sort
+    if $scope.sort == thing
+      $scope.sort = "-#{thing}"
+    else
+      $scope.sort = thing
+    console.log("setSort", b, thing, $scope.sort)
+
+  $scope.sortOrder = (name) ->
+    switch $scope.sort
+      when name then "^"
+      when "-#{name}" then "v"
+      else ""

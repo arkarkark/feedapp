@@ -2,6 +2,7 @@ import collections
 import datetime
 import json
 import logging
+import pytz
 import random
 import re
 import string
@@ -12,10 +13,10 @@ import httplib2
 
 import PyRSS2Gen as rss
 
+import dateutil.parser
 import googleapiclient.discovery
-
-from google.appengine.ext import ndb
-from wtwf import wtwfhandler
+import wtwf.wtwfhandler
+import google.appengine.ext
 
 RE_VALID_NAME = re.compile(r'^[a-zA-Z0-9_-]+$')
 
@@ -54,22 +55,22 @@ class JsonStruct:
   def dict(self):
     return self.__dict__
 
-class AuthedFeed(ndb.Model):
+class AuthedFeed(google.appengine.ext.ndb.Model):
   """Stores Info about feeds that we're serving."""
 
-  blog_id = ndb.IntegerProperty()
-  name = ndb.StringProperty()
-  title = ndb.StringProperty()
-  url = ndb.StringProperty()
+  blog_id = google.appengine.ext.ndb.IntegerProperty()
+  name = google.appengine.ext.ndb.StringProperty()
+  title = google.appengine.ext.ndb.StringProperty()
+  url = google.appengine.ext.ndb.StringProperty()
   credentials = oauth2client.contrib.appengine.CredentialsNDBProperty()
-  tombstone_days_older = ndb.IntegerProperty()
-  keep_first = ndb.IntegerProperty()
+  tombstone_days_older = google.appengine.ext.ndb.IntegerProperty()
+  keep_first = google.appengine.ext.ndb.IntegerProperty()
   # optional fields
-  last_updated = ndb.DateTimeProperty(auto_now=True)
-  last_updated_by = ndb.StringProperty()
-  redirect_url = ndb.StringProperty()
+  last_updated = google.appengine.ext.ndb.DateTimeProperty(auto_now=True)
+  last_updated_by = google.appengine.ext.ndb.StringProperty()
+  redirect_url = google.appengine.ext.ndb.StringProperty()
   # automatic fields
-  created = ndb.DateTimeProperty(auto_now_add=True)
+  created = google.appengine.ext.ndb.DateTimeProperty(auto_now_add=True)
 
   def to_json_object(self):
     return {
@@ -83,7 +84,7 @@ class AuthedFeed(ndb.Model):
     }
 
 
-class BloggerHandler(wtwfhandler.WtwfHandler):
+class BloggerHandler(wtwf.wtwfhandler.WtwfHandler):
   """Used to make sure we have an oauth token."""
 
   @auth.decorator.oauth_required
@@ -98,7 +99,8 @@ class BloggerHandler(wtwfhandler.WtwfHandler):
 
     self.redirect('/blogger/')
 
-class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
+
+class BloggerDataHandler(wtwf.wtwfhandler.GetGenericDataHandler(AuthedFeed)):
   """Main handler. If user is not logged in via OAuth it will display welcome
   page. In other case user's blogs on Blogger will be displayed."""
 
@@ -145,7 +147,7 @@ class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
       item = item.to_json_object()
       blogs.append(item)
 
-    self.response.out.write(json.dumps(blogs, default=wtwfhandler.JsonPrinter))
+    self.response.out.write(json.dumps(blogs, default=wtwf.wtwfhandler.JsonPrinter))
 
   @auth.decorator.oauth_required
   def post(self):
@@ -209,7 +211,8 @@ class BloggerDataHandler(wtwfhandler.GetGenericDataHandler(AuthedFeed)):
 
     self.error(404)
 
-class GetFeedHandler(wtwfhandler.WtwfHandler):
+
+class GetFeedHandler(wtwf.wtwfhandler.WtwfHandler):
   """Get the RSS feed for an AuthedFeed."""
 
   def get(self, name):  # pylint: disable=W0221
@@ -228,10 +231,20 @@ class GetFeedHandler(wtwfhandler.WtwfHandler):
       title=blog.title,
     )
 
+    if afeed.keep_first:
+      posts = posts[0:afeed.keep_first]
+
     for post in posts:
       post = JsonStruct.fromDict(post)
 
       # TODO sanitize per the keep_fisrt and tombstone_days_older settings
+      if afeed.tombstone_days_older:
+        now = datetime.datetime.utcnow().replace(tzinfo=pytz.utc)
+        published = dateutil.parser.parse(post.published)
+        age = (now - published).days
+        if age > afeed.tombstone_days_older:
+          logging.info("Feed %r Removing post %d days old:%r", name, age, post.title)
+          post.title = post.content = 'This post is no longer available.'
 
       f.items.append(rss.RSSItem(
         description = post.content,

@@ -1,26 +1,29 @@
-div ng-show="loading" Loading...
-div ng-hide="loading"
-  table
-    tr
-      th
-        p Your blogs:
-      th Url
-      th
-    tr ng-repeat=("blog in blogs")
-      td  ng-bind="blog.title"
-      td
-        a target="_blank" ng-href="{{blog.url}}" ng-bind="blog.url"
-      td
-        a target="_blank" ng-href="/public/data/blogger/feed/{{blog.name}}" ng-show="blog.name" feed
-      td
-        a ng-href="/blogger/edit/{{blog.blog_id}}" ng-show="blog.name" Edit
-        a ng-click="create(blog)" ng-hide="blog.name" Create
-    tr
-      td
-        i Add Blog by URL
-      td
-        input type="url" ng-model="byUrl" style="width: 100%" placeholder="blog url"
-      td
-        input size="8" type="name" ng-model="name" placeholder="name"
-      td
-        a ng-click="addByUrl(byUrl, name)" Create
+.blogger-list
+  div ng-show="loading" Loading...
+  div ng-hide="loading"
+    table
+      tr
+        th ng-click="setSort('title')"
+          | Title  {{sortOrder('title')}}
+        th ng-click="setSort('url')"
+          | Url {{sortOrder('url')}}
+        th ng-click="setSort('name')"
+        th ng-click="setSort('name')"
+      tr ng-repeat=("blog in blogs | orderBy:sort")
+        td  ng-bind="blog.title"
+        td
+          a target="_blank" ng-href="{{blog.url}}" ng-bind="blog.url"
+        td
+          a target="_blank" ng-href="/public/data/blogger/feed/{{blog.name}}" ng-show="blog.name" feed
+        td
+          a ng-href="/blogger/edit/{{blog.blog_id}}" ng-show="blog.name" Edit
+          a ng-click="create(blog)" ng-hide="blog.name" Create
+      tr
+        td
+          i Add Blog by URL
+        td
+          input type="url" ng-model="byUrl" style="width: 100%" placeholder="blog url"
+        td
+          input size="8" type="name" ng-model="name" placeholder="name"
+        td
+          a ng-click="addByUrl(byUrl, name)" Create

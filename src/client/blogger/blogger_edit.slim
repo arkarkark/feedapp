@@ -4,7 +4,7 @@ div ng-hide="loading"
     tr
       td Blog:
       td
-        a href="{{blog.link}}" ng-bind="blog.title"
+        a ng-href="{{blog.url}}" ng-bind="blog.title"
     tr
       td Name:
       td
@@ -20,3 +20,4 @@ div ng-hide="loading"
         input ng-model="blog.keep_first" type="number"
   button ng-click="update(blog)" Update
   button ng-click="delete(blog)" Delete
+  button ng-click="done()" Done

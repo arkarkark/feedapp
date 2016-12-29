@@ -18,7 +18,6 @@ from google.appengine.api.mail import InboundEmailMessage
 
 from wtwf import wtwfhandler
 from wtwf.WtwfModel import WtwfNdbModel
-import sanitizeblogger
 
 from crud import crud_model
 from crud import crud_handler
@@ -168,8 +167,7 @@ class SetupDemo(webapp.RequestHandler):
 class MailItemDataHandler(crud_handler.GetCrudHandler(MailFeedItem)):
   def postObject(self, item, js):
     if self.request.get('action') == 'tombstone':
-      item.body = sanitizeblogger.DELETED
-      item.subject = sanitizeblogger.DELETED
+      item.body = item.subject = "This post is no longer available."
       item.put()
       # no need to updated id from key because item will never be new
       js = item.AsJsonObject(js=js)
