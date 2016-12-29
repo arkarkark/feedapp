@@ -14,6 +14,7 @@ module.exports =
       "angular-resource"
       "angular-route"
       "angular-sanitize"
+      "font-awesome-webpack-sass"
       "./client/vendor.coffee"
     ]
   output:
@@ -24,9 +25,6 @@ module.exports =
     loaders: [
       {test: /\.coffee$/, 		loaders: ["ng-annotate-loader", "coffee-loader"]}
       {test: /\.css$/, 			  loaders: ["style", "css?sourceMap"]}
-        # {test: /\.woff$/,   		loaders: ["url-loader?limit=10000&minetype=application/font-woff"]}
-        # {test: /\.woff2$/,      loaders: ["url?limit=10000"]}
-        # {test: /\.ttf$/,    		loaders: ["file-loader"]}
-        # {test: /\.eot$/,    		loaders: ["file-loader"]}
-        # {test: /\.svg$/,    		loaders: ["file-loader"]}
+      {test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "url-loader?limit=10000&minetype=application/font-woff&publicPath=assets/" }
+      {test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: "file-loader?publicPath=assets/" }
     ]

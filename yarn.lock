@@ -663,7 +663,7 @@ css-color-names@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/css-color-names/-/css-color-names-0.0.4.tgz#808adc2e79cf84738069b646cb20ec27beb629e0"
 
-css-loader:
+css-loader, css-loader@^0.25.0:
   version "0.25.0"
   resolved "https://registry.yarnpkg.com/css-loader/-/css-loader-0.25.0.tgz#c3febc8ce28f4c83576b6b13707f47f90c390223"
   dependencies:
@@ -1128,6 +1128,18 @@ flagged-respawn@^0.3.2:
 flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
+
+font-awesome:
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/font-awesome/-/font-awesome-4.7.0.tgz#8fa8cf0411a1a31afd07b06d2902bb9fc815a133"
+
+font-awesome-webpack-sass:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/font-awesome-webpack-sass/-/font-awesome-webpack-sass-0.0.3.tgz#4ad69ea8b92646368af6c80687abbd3cb5d3d58b"
+  dependencies:
+    css-loader "^0.25.0"
+    sass-loader "^4.0.0"
+    style-loader "^0.13.0"
 
 for-in@^0.1.5:
   version "0.1.6"
@@ -3372,6 +3384,14 @@ sass-loader:
     loader-utils "^0.2.15"
     object-assign "^4.1.0"
 
+sass-loader@^4.0.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/sass-loader/-/sass-loader-4.1.1.tgz#79ef9468cf0bf646c29529e1f2cba6bd6e51c7bc"
+  dependencies:
+    async "^2.0.1"
+    loader-utils "^0.2.15"
+    object-assign "^4.1.0"
+
 sax@~1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.1.tgz#7b8e656190b228e81a66aea748480d828cd2d37a"
@@ -3684,7 +3704,7 @@ strip-json-comments@^1.0.2, strip-json-comments@~1.0.4, strip-json-comments@1.0.
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-1.0.4.tgz#1e15fbcac97d3ee99bf2d73b4c656b082bbafb91"
 
-style-loader:
+style-loader, style-loader@^0.13.0:
   version "0.13.1"
   resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.13.1.tgz#468280efbc0473023cd3a6cd56e33b5a1d7fc3a9"
   dependencies:

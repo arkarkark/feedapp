@@ -4,9 +4,13 @@
     table
       tr
         th ng-click="setSort('title')"
-          | Title  {{sortOrder('title')}}
+          | Title
+          .sort
+            i.fa ng-class="sortOrder('title')"
         th ng-click="setSort('url')"
-          | Url {{sortOrder('url')}}
+          | Url
+          .sort
+            i.fa ng-class="sortOrder('url')"
         th ng-click="setSort('name')"
         th ng-click="setSort('name')"
       tr ng-repeat=("blog in blogs | orderBy:sort")

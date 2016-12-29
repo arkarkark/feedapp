@@ -1,7 +1,16 @@
 .blogger-list {
   table tr th {
+    position: relative;
+
     user-select: none;
     outline: none;
     border: 0;
+
+    .sort {
+      position: absolute;
+      right: 0;
+      top: 5px;
+      font-size: 10px;
+    }
   }
 }

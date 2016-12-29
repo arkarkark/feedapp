@@ -42,6 +42,8 @@
     "extract-loader": "0.0.2",
     "extract-text-webpack-plugin": "<2.0.0",
     "file-loader": "0.9.0",
+    "font-awesome": "^4.7.0",
+    "font-awesome-webpack-sass": "^0.0.3",
     "gulp": "3.9.1",
     "gulp-coffee": "2.3.2",
     "gulp-debug": "2.1.2",

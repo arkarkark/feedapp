@@ -23,15 +23,13 @@ module.exports = ($scope, Blogger) ->
     return promise
 
   $scope.setSort = (thing) ->
-    b = $scope.sort
     if $scope.sort == thing
       $scope.sort = "-#{thing}"
     else
       $scope.sort = thing
-    console.log("setSort", b, thing, $scope.sort)
 
   $scope.sortOrder = (name) ->
     switch $scope.sort
-      when name then "^"
-      when "-#{name}" then "v"
+      when name then "fa-sort-alpha-asc"
+      when "-#{name}" then "fa-sort-alpha-desc"
       else ""
