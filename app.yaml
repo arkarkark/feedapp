@@ -5,6 +5,10 @@ threadsafe: true
 builtins:
 - appstats: on
 
+libraries:
+- name: ssl
+  version: latest
+
 inbound_services:
 - mail
 

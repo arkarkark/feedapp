@@ -10,6 +10,7 @@ source =
   include: [
     "*.yaml"
     "client_secrets.json"
+    "api_keys.json"
     "testdata*/**/*"
     "src/server/**/*"
   ]

@@ -21,8 +21,10 @@ import blogger
 import expand
 import mail
 import auth
+import gps
 
 app = webapp.WSGIApplication([
+  ('/data/gps.*', gps.Demo),
   ('/data/blogger/oauth', blogger.BloggerHandler),
   ('/data/blogger/blog', blogger.BloggerDataHandler),
   (r'/public/data/blogger/feed/(\w+)', blogger.GetFeedHandler),

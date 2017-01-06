@@ -6,6 +6,7 @@ import os
 import logging
 import datetime
 import urllib
+import json
 
 from google.appengine.api import mail
 from google.appengine.api import users
@@ -13,6 +14,12 @@ from google.appengine.ext import ndb
 from google.appengine.ext import webapp
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
 from google.appengine.api.mail import InboundEmailMessage
+
+from google.appengine.api import images
+
+from oauth2client.contrib.appengine import AppAssertionCredentials
+
+import auth
 
 from wtwf import wtwfhandler
 from wtwf.WtwfModel import WtwfNdbModel
@@ -84,36 +91,29 @@ class Demo(webapp.RequestHandler):
   """Setup a Demo feed."""
 
   def get(self):
-    if not users.is_current_user_admin():
-      self.error(401)
-      return
+    self.response.headers['Content-Type'] = 'text/plain'
 
-    # remove the old test
-    name = "test_feed"
-    feed = MailFeed.query(MailFeed.name == name).get()
-    if feed:
-      for item in MailFeedItem.query(ancestor=feed.key):
-        item.key.delete()
-      feed.key.delete()
+    file_name = os.path.join(os.path.dirname(__file__), 'original_msg.txt')
+    message = mail.InboundEmailMessage(open(file_name, 'r').read())
 
-    # now make some test stuff
-    feed = MailFeed(name=name)
-    feed.put()
+    if False:
+      for content_type, body in message.bodies():
+        self.response.out.write("body %r\n" % [content_type, body.decode()])
 
-    logging.info('added new feed: %s', name)
+    for attachment in message.attachments:
+      image_data = attachment.payload.decode()
+      img = images.Image(image_data=image_data)
+      img.rotate(0)
+      img.execute_transforms(parse_source_metadata=True)
 
-    testdata = os.path.join(os.path.dirname(__file__), 'testdata')
-    etf = EmailToFeed()
+      self.response.out.write("done %r\n" % [
+        attachment.filename, attachment.content_id,
+        # dir(img),
+      ],
+      )
+      self.response.out.write(
+        json.dumps(img.get_original_metadata(), sort_keys=True, indent=4, separators=(',', ': '))
+      )
 
-    for x in range(1, 4):
-      filename = os.path.join(testdata, "email-%02d.txt" % x)
-      logging.info('adding: %s', filename)
-      self.response.out.write(filename + '</br>')
-      f = file(filename)
-      body = '\r\n'.join(line.rstrip() for line in f)
-      f.close()
-      # now inject this into the code where we process emails.
-      msg = InboundEmailMessage(body)
-      etf.receive(msg, feed)
-    self.response.out.write('<p><button onClick="history.back()">' +
-                            'DONE</button></p>')
+    reverse_geocode_result = auth.googlemaps.reverse_geocode((40.714224, -73.961452))
+    self.response.out.write("reverse %r" % reverse_geocode_result)
