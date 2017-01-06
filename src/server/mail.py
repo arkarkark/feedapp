@@ -98,11 +98,12 @@ class FeedFromEmail(webapp.RequestHandler):
     items = MailFeedItem.query(ancestor=feed.key).order(
         -MailFeedItem.created).fetch(5)
 
-    f = rss.RSS2(title = "Generated Feed",
-                 link = "http://example.com/",
-                 description = "Generated Feed ",
-                 lastBuildDate = datetime.datetime.now(),
-                 )
+    f = rss.RSS2(
+      title="Generated Feed",
+      link="http://example.com/",
+      description="Generated Feed ",
+      lastBuildDate=datetime.datetime.now(),
+    )
 
     for x in items:
       guid = x.guid
@@ -113,13 +114,13 @@ class FeedFromEmail(webapp.RequestHandler):
         except:
           pass
 
-      f.items.append(
-        rss.RSSItem(
-          title = x.subject,
-          link = None,
-          description = x.body,
-          guid = rss.Guid(x.guid, False),
-          pubDate = x.created))
+      f.items.append(rss.RSSItem(
+        title=x.subject,
+        link=None,
+        description=x.body,
+        guid=rss.Guid(x.guid, False),
+        pubDate=x.created,
+      ))
 
     self.response.headers['Content-Type'] = 'text/xml'
     f.write_xml(self.response.out)

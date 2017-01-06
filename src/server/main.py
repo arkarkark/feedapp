@@ -17,17 +17,19 @@ from google.appengine.ext import webapp
 from wtwf import wtwfhandler
 from crud import crud_handler
 
-import blogger
-import expand
-import mail
 import auth
+import blogger
+# import expand
 import gps
+import instagram
+import mail
 
 app = webapp.WSGIApplication([
   ('/data/gps.*', gps.Demo),
   ('/data/blogger/oauth', blogger.BloggerHandler),
   ('/data/blogger/blog', blogger.BloggerDataHandler),
   (r'/public/data/blogger/feed/(\w+)', blogger.GetFeedHandler),
+  (r'/public/data/instagram/feed/(\w+)', instagram.RssFeed),
   (r'/mailfeed/([a-zA-Z0-9_-]+)', mail.FeedFromEmail),
   # ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),
   # ('/data/expand/feed.json', crud_handler.GetCrudHandler(expand.ExpandFeed)),
