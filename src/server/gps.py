@@ -7,6 +7,16 @@ import logging
 import datetime
 import urllib
 import json
+import StringIO
+
+from PIL import Image, ImageDraw, ImageFont
+
+from email.MIMEMultipart import MIMEMultipart
+from email.MIMEBase import MIMEBase
+from email.MIMEImage import MIMEImage
+from email.MIMEText import MIMEText
+from email import Encoders
+
 
 from google.appengine.api import mail
 from google.appengine.api import users
@@ -116,4 +126,53 @@ class Demo(webapp.RequestHandler):
       )
 
     reverse_geocode_result = auth.googlemaps.reverse_geocode((40.714224, -73.961452))
-    self.response.out.write("reverse %r" % reverse_geocode_result)
+    # self.response.out.write(json.dumps(reverse_geocode_result, sort_keys=True, indent=4, separators=(',', ': ')))
+
+    address = None
+    if len(reverse_geocode_result) > 0 and "formatted_address" in reverse_geocode_result[0]:
+      address = reverse_geocode_result[0]["formatted_address"]
+    self.response.out.write("\n\nAddress: %r\n\n" % address)
+
+    email = users.get_current_user().email()
+    msg = mail.EmailMessage(
+      sender=email,
+      to=email,
+      subject="new hello",
+    )
+
+    mime = MIMEMultipart('related')
+    #  alternative = MIMEMultipart('alternative')
+    #  mime.attach(alternative)
+    #  alternative.attach(MIMEText("""some img""", 'plain', 'utf-8'))
+    #  alternative.attach(MIMEText("""<img src="cid:foo">Hello World""",'html', 'utf-8'))
+    mime.attach(MIMEText("""<img src="cid:foo">Hello World""",'html', 'utf-8'))
+
+    image_data = attachment.payload.decode()
+    img = images.Image(image_data=image_data)
+
+    text_img = Image.new('RGBA', (800,600), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(text_img)
+    draw.text((0, 0), 'HELLO TEXT', font=ImageFont.load_default())
+
+    output = StringIO.StringIO()
+    text_img.save(output, format="png")
+    text_layer = output.getvalue()
+    output.close()
+
+    # TODO(ark) handle orientation == 3 (rotate 180 degrees)
+    # http://www.impulseadventure.com/photo/exif-orientation.html
+
+    merged = images.composite([(image_data, 0, 0, 1.0, images.TOP_LEFT),
+                               (text_layer, 0, 0, 1.0, images.TOP_LEFT)],
+                              640, 480)
+
+    img_part = MIMEImage(merged, name="whut.png")
+    img_part.add_header("Content-ID", "<foo>")
+
+    mime.attach(img_part)
+
+    msg.update_from_mime_message(mime)
+    msg.send()
+
+
+    self.response.out.write(mime.as_string())

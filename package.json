@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "bash -c 'rm -rfv dist'",
     "deploy": "./setup.sh; cd dist; gcloud --quiet app --project feedappywtwf deploy --version=2",
-    "dev": "rm -rfv dist/[^l]*; ./setup.sh; ./node_modules/.bin/gulp watch & cd dist; dev_appserver.py --host=0.0.0.0 --port 6724 .",
+    "dev": "rm -rfv dist/[^l]*; ./setup.sh; ./node_modules/.bin/gulp watch & cd dist; dev_appserver.py --host=0.0.0.0 --port=6724 --enable_sendmail=yes .",
     "setup": "./setup.sh",
     "test": "bash -c 'for fil in *_test.py; do $fil; done'"
   },

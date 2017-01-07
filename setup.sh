@@ -8,9 +8,8 @@ if [ ! -e dist/lib/googlemaps ]; then
   ZIPFILE=/tmp/google-maps-services-python.zip
   curl https://codeload.github.com/gae123/google-maps-services-python/zip/master -o $ZIPFILE
   unzip -d dist/lib $ZIPFILE
-  ln -s dist/lib/google-maps-services-python-master/googlemaps/roads.py
+  (cd dist/lib; ln -s google-maps-services-python-master/googlemaps googlemaps)
 fi
-
 
 if [ ! -e dist/lib/PyRSS2Gen.py ]; then
   if [ ! -d dist/lib/PyRSS2Gen-1.1 ]; then

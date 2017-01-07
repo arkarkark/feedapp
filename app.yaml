@@ -8,6 +8,8 @@ builtins:
 libraries:
 - name: ssl
   version: latest
+- name: PIL
+  version: latest
 
 inbound_services:
 - mail
