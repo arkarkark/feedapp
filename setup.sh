@@ -3,6 +3,7 @@
 [ ! -d dist/lib 		] && mkdir -p dist/lib
 [ ! -e dist/lib/googleapiclient ] && pip install -t dist/lib google-api-python-client
 [ ! -e dist/lib/pytz 		] && pip install -t dist/lib pytz
+[ ! -e dist/lib/requests	] && pip install -t dist/lib requests
 
 if [ ! -e dist/lib/googlemaps ]; then
   ZIPFILE=/tmp/google-maps-services-python.zip
