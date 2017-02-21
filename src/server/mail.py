@@ -62,14 +62,23 @@ class EmailToFeed(InboundMailHandler):
 
   def receive(self, mail_message, feed):
 
-    sender = mail_message.sender
+    sender = None
+    if 'list-id' in mail_message.original:
+      sender = mail_message.original['list-id'].strip("""<>"'`""").split(".")[0]
+    else:
+      sender = mail_message.sender
 
-    if sender:
-      # strip it just to the domain name
-      try:
-        sender = sender.split("@")[1].split(".")[-2]
-      except IndexError:
-        pass
+      if sender:
+        # strip it just to the domain name
+        try:
+          short_sender = sender.split("@")[1].split(".")[-2]
+          if short_sender in ['gmail', 'google', 'yahoo', 'aol', 'ca']:
+            # o.k. try the bit before the @ sign for gmail users
+            sender = sender.split("@")[0]
+          else:
+            sender = short_sender
+        except IndexError:
+          pass
 
     subject = mail_message.subject
     if sender:

@@ -116,12 +116,12 @@ class Demo(webapp.RequestHandler):
       img.rotate(0)
       img.execute_transforms(parse_source_metadata=True)
 
-      self.response.out.write("done %r\n" % [
+      True or self.response.out.write("done %r\n" % [
         attachment.filename, attachment.content_id,
         # dir(img),
       ],
       )
-      self.response.out.write(
+      True or self.response.out.write(
         json.dumps(img.get_original_metadata(), sort_keys=True, indent=4, separators=(',', ': '))
       )
 
@@ -131,7 +131,7 @@ class Demo(webapp.RequestHandler):
     address = None
     if len(reverse_geocode_result) > 0 and "formatted_address" in reverse_geocode_result[0]:
       address = reverse_geocode_result[0]["formatted_address"]
-    self.response.out.write("\n\nAddress: %r\n\n" % address)
+    # self.response.out.write("\n\nAddress: %r\n\n" % address)
 
     email = users.get_current_user().email()
     msg = mail.EmailMessage(
@@ -149,10 +149,26 @@ class Demo(webapp.RequestHandler):
 
     image_data = attachment.payload.decode()
     img = images.Image(image_data=image_data)
+    img.rotate(0)
+    img.execute_transforms(parse_source_metadata=True)
+    meta = img.get_original_metadata()
+    orientaion = meta.get("Orientation", 1)
+    if orientaion == 3:
+      img.rotate(180)
+      img.execute_transforms()
 
-    text_img = Image.new('RGBA', (800,600), (0, 0, 0, 0))
+    text_img = Image.new('RGBA', (100,100), (0, 0, 0, 0))
     draw = ImageDraw.Draw(text_img)
-    draw.text((0, 0), 'HELLO TEXT', font=ImageFont.load_default())
+    draw.text((0, 0), 'HELLO TEXT jhfjhjdhsfhjdsfjhdfshjjdfshhjdfshjfdshjjhdfshjfds hjdf', font=ImageFont.load_default())
+
+    draw.pieslice([0, 0, 100,100], 0, 90, "blue", "green")
+    # draw.rectangle([(0,0), (200,200)], "blue", "green")
+    text_img = text_img.rotate(135)
+    draw = ImageDraw.Draw(text_img)
+    draw.text((47, 20), '1', font=ImageFont.load_default())
+
+    text_img = text_img.rotate(33)
+
 
     output = StringIO.StringIO()
     text_img.save(output, format="png")
@@ -162,7 +178,7 @@ class Demo(webapp.RequestHandler):
     # TODO(ark) handle orientation == 3 (rotate 180 degrees)
     # http://www.impulseadventure.com/photo/exif-orientation.html
 
-    merged = images.composite([(image_data, 0, 0, 1.0, images.TOP_LEFT),
+    merged = images.composite([(img, 0, 0, 1.0, images.TOP_LEFT),
                                (text_layer, 0, 0, 1.0, images.TOP_LEFT)],
                               640, 480)
 
@@ -172,7 +188,9 @@ class Demo(webapp.RequestHandler):
     mime.attach(img_part)
 
     msg.update_from_mime_message(mime)
-    msg.send()
+    # msg.send()
 
+    # self.response.out.write(mime.as_string())
 
-    self.response.out.write(mime.as_string())
+    self.response.headers['Content-Type'] = 'image/png'
+    self.response.write(merged)

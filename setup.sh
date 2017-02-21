@@ -4,6 +4,7 @@
 [ ! -e dist/lib/googleapiclient ] && pip install -t dist/lib google-api-python-client
 [ ! -e dist/lib/pytz 		] && pip install -t dist/lib pytz
 
+
 if [ ! -e dist/lib/googlemaps ]; then
   ZIPFILE=/tmp/google-maps-services-python.zip
   curl https://codeload.github.com/gae123/google-maps-services-python/zip/master -o $ZIPFILE
@@ -34,3 +35,7 @@ else
 fi
 
 ./node_modules/.bin/gulp
+
+if [ "$(python -c 'import PIL; print PIL.PILLOW_VERSION')" != "2.9.0" ]; then
+  echo "WARNING: PIL(low) might be the wrong version: \`sudo pip install Pillow==2.9\`"
+fi
