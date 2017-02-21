@@ -2,6 +2,7 @@
 
 __author__ = 'wtwf.com (Alex K)'
 
+import cgi
 import datetime
 import json
 import logging
@@ -29,22 +30,25 @@ class RssFeed(webapp.RequestHandler):
       return self.error(404)
 
     f = None
+
     for item in media["items"]:
       if f is None:
         user = item["user"]
+        title = "%s (@%s)" % (user["full_name"], user["username"])
         f = rss.RSS2(
-          title="%s (@%s)" % (user["full_name"], user["username"]),
+          title=title,
           link="https://instagram.com/%s" % user["username"],
           description="",
           lastBuildDate=datetime.datetime.now(),
         )
 
-      body = """<a href="%s"><img src="%s"></a>""" % (
+      body = """<a href="%s"><img src="%s"></a><br>%s""" % (
         item["link"],
-        item["images"]["standard_resolution"]["url"]
+        item["images"]["standard_resolution"]["url"],
+        cgi.escape(item["caption"]["text"]),
       )
       f.items.append(rss.RSSItem(
-        title=item["caption"]["text"],
+        title=title,
         link=item["link"],
         description=body,
         guid=rss.Guid(item["id"], False),
