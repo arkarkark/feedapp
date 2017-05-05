@@ -6,7 +6,7 @@ import cgi
 import datetime
 import json
 import logging
-import os
+import re
 
 import PyRSS2Gen as rss
 
@@ -42,18 +42,32 @@ class RssFeed(webapp.RequestHandler):
           lastBuildDate=datetime.datetime.now(),
         )
 
-      body = """<a href="%s"><img src="%s"></a><br>%s""" % (
-        item["link"],
-        item["images"]["standard_resolution"]["url"],
-        cgi.escape(item["caption"]["text"]),
+      img_src = re.sub(
+        r'c[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/',
+        '',
+        item["images"]["standard_resolution"]["url"]
       )
-      f.items.append(rss.RSSItem(
-        title=title,
-        link=item["link"],
-        description=body,
-        guid=rss.Guid(item["id"], False),
-        pubDate=datetime.datetime.fromtimestamp(int(item["created_time"])),
-      ))
+
+      if item["type"] == "video":
+        media = """<video width="320" height="320" controls="controls">
+                    <source src="%s" type="video/mp4" />
+                  </video>""" % item["alt_media_url"]
+      else:
+        media = """<a href="%s"><img src="%s"></a>""" % (item["link"], img_src)
+
+      body = """%s<br>%s""" % (media, cgi.escape(item["caption"]["text"]))
+
+      rss_item = {
+        "title": title,
+        "link": item["link"],
+        "description": body,
+        "guid": rss.Guid(item["id"], False),
+        "pubDate": datetime.datetime.fromtimestamp(int(item["created_time"])),
+      }
+      if item["type"] == "video":
+        rss_item["enclosure"] = rss.Enclosure(item["alt_media_url"], 10, "video/mp4")
+
+      f.items.append(rss.RSSItem(**rss_item))
 
     self.response.headers['Content-Type'] = 'text/xml'
     f.write_xml(self.response.out)

@@ -21,4 +21,4 @@ App Engine RSS Feed maker
 1. `./setup.sh`
 1. `npm test`
 1. `npm run dev` to see if it works
-1. `npm run install` to push to production
+1. `npm run deploy` to push to production
