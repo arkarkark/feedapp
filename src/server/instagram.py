@@ -50,8 +50,8 @@ class RssFeed(webapp.RequestHandler):
 
       if item["type"] == "video":
         media = """<video width="320" height="320" controls="controls">
-                    <source src="%s" type="video/mp4" />
-                  </video>""" % item["alt_media_url"]
+                    <source src="%s" type="video/mp4" poster="%s" />
+                  </video>""" % (item["alt_media_url"], img_src)
       else:
         media = """<a href="%s"><img src="%s"></a>""" % (item["link"], img_src)
 
