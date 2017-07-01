@@ -29,7 +29,7 @@ app = webapp.WSGIApplication([
   ('/data/blogger/oauth', blogger.BloggerHandler),
   ('/data/blogger/blog', blogger.BloggerDataHandler),
   (r'/public/data/blogger/feed/(\w+)', blogger.GetFeedHandler),
-  (r'/public/data/instagram/feed/(\w+)', instagram.RssFeed),
+  (r'/public/data/instagram/feed/([^/]+)', instagram.RssFeed),
   (r'/mailfeed/([a-zA-Z0-9_-]+)', mail.FeedFromEmail),
   # ('/expand/([a-zA-Z0-9_.%-]+)', expand.ExpandHandler),
   # ('/data/expand/feed.json', crud_handler.GetCrudHandler(expand.ExpandFeed)),

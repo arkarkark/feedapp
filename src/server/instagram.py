@@ -48,12 +48,11 @@ class RssFeed(webapp.RequestHandler):
         item["images"]["standard_resolution"]["url"]
       )
 
+      media = """<a href="%s"><img src="%s"></a>""" % (item["link"], img_src)
       if item["type"] == "video":
         media = """<video width="320" height="320" controls="controls">
                     <source src="%s" type="video/mp4" poster="%s" />
-                  </video>""" % (item["alt_media_url"], img_src)
-      else:
-        media = """<a href="%s"><img src="%s"></a>""" % (item["link"], img_src)
+                  </video><br>%s<br>""" % (item["alt_media_url"], img_src, media)
 
       body = """%s<br>%s""" % (media, cgi.escape(item["caption"]["text"]))
 
