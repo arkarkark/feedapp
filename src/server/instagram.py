@@ -54,7 +54,10 @@ class RssFeed(webapp.RequestHandler):
                     <source src="%s" type="video/mp4" poster="%s" />
                   </video><br>%s<br>""" % (item["alt_media_url"], img_src, media)
 
-      body = """%s<br>%s""" % (media, cgi.escape(item["caption"]["text"]))
+      if "caption" in item and item["caption"] is not None and "text" in item["caption"]:
+        body = """%s<br>%s""" % (media, cgi.escape(item["caption"]["text"]))
+      else:
+        body = media
 
       rss_item = {
         "title": title,
