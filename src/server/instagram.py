@@ -50,9 +50,15 @@ class RssFeed(webapp.RequestHandler):
 
       media = """<a href="%s"><img src="%s"></a>""" % (item["link"], img_src)
       if item["type"] == "video":
-        media = """<video width="320" height="320" controls="controls">
+        media = """<video width="%s" height="%s" controls="controls">
                     <source src="%s" type="video/mp4" poster="%s" />
-                  </video><br>%s<br>""" % (item["alt_media_url"], img_src, media)
+                  </video><br>%s<br>""" % (
+                    item["videos"]["standard_resolution"]["width"],
+                    item["videos"]["standard_resolution"]["height"],
+                    item["videos"]["standard_resolution"]["url"],
+                    img_src,
+                    media
+                  )
 
       body = """%s<br>%s""" % (media, cgi.escape((item.get("caption") or {}).get("text", "")))
 
@@ -64,7 +70,7 @@ class RssFeed(webapp.RequestHandler):
         "pubDate": datetime.datetime.fromtimestamp(int(item["created_time"])),
       }
       if item["type"] == "video":
-        rss_item["enclosure"] = rss.Enclosure(item["alt_media_url"], 10, "video/mp4")
+        rss_item["enclosure"] = rss.Enclosure(item["videos"]["standard_resolution"]["url"], 10, "video/mp4")
 
       f.items.append(rss.RSSItem(**rss_item))
 
