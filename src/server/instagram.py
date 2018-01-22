@@ -17,26 +17,38 @@ class RssFeed(webapp.RequestHandler):
   """Make RSS Feed for a (public) instagram user."""
 
   def get(self, user):
-    url = "https://websta.me/rss/n/%s" % user
-    self.redirect(url)
-    return
+    #  url = "https://websta.me/rss/n/%s" % user
+    #  self.redirect(url)
+    #  return
 
-    url = "https://www.instagram.com/%s/media/" % user
+    url = "https://www.instagram.com/%s/?__a=1" % user
     logging.info("fetching: %r", url)
     result = urlfetch.fetch(url)
     if result.status_code != 200:
       return self.error(result.status_code)
 
-    media = json.loads(result.content)
+    payload = json.loads(result.content)
 
-    if "items" not in media or len(media["items"]) == 0:
+    user = payload.get("user")
+    if not user:
+      logging.info("no user in payload")
+      return self.error(404)
+
+    media = user.get("media")
+    if not media:
+      logging.info("no media in user")
+      return self.error(404)
+
+    nodes = media.get("nodes")
+
+    if not nodes:
+      logging.info("no nodes in media in user")
       return self.error(404)
 
     f = None
 
-    for item in media["items"]:
+    for item in nodes:
       if f is None:
-        user = item["user"]
         title = "%s (@%s)" % (user["full_name"], user["username"])
         f = rss.RSS2(
           title=title,
@@ -45,37 +57,50 @@ class RssFeed(webapp.RequestHandler):
           lastBuildDate=datetime.datetime.now(),
         )
 
-      img_src = re.sub(
-        r'c[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/',
-        '',
-        item["images"]["standard_resolution"]["url"]
-      )
+      #  img_src = re.sub(
+      #  r'c[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/',
+      #  '',
+      #  item["thumbnail_resources"][-1]["src"]
+      #  )
+      img_src = item["thumbnail_resources"][-1]["src"]
 
-      media = """<a href="%s"><img src="%s"></a>""" % (item["link"], img_src)
-      if item["type"] == "video":
+      link = "https://instagram.com/p/%s" % item["code"]
+
+      media = """<a href="%s"><img src="%s"></a>""" % (link, img_src)
+      if item.get("is_video"):
         media = """<video width="%s" height="%s" controls="controls">
                     <source src="%s" type="video/mp4" poster="%s" />
                   </video><br>%s<br>""" % (
-                    item["videos"]["standard_resolution"]["width"],
-                    item["videos"]["standard_resolution"]["height"],
-                    item["videos"]["standard_resolution"]["url"],
+                    item["dimensions"]["height"],
+                    item["dimensions"]["width"],
+                    GetVideoUrl(link),
                     img_src,
                     media
                   )
 
-      body = """%s<br>%s""" % (media, cgi.escape((item.get("caption") or {}).get("text", "")))
+      body = """%s<br>%s""" % (media, cgi.escape(item.get("caption")))
 
       rss_item = {
         "title": title,
-        "link": item["link"],
+        "link": link,
         "description": body,
         "guid": rss.Guid(item["id"], False),
-        "pubDate": datetime.datetime.fromtimestamp(int(item["created_time"])),
+        "pubDate": datetime.datetime.fromtimestamp(int(item["date"])),
       }
-      if item["type"] == "video":
-        rss_item["enclosure"] = rss.Enclosure(item["videos"]["standard_resolution"]["url"], 10, "video/mp4")
+      #  if item.get("is_video"):
+      #  rss_item["enclosure"] = rss.Enclosure(item["videos"]["standard_resolution"]["url"], 10, "video/mp4")
 
       f.items.append(rss.RSSItem(**rss_item))
 
     self.response.headers['Content-Type'] = 'text/xml'
     f.write_xml(self.response.out)
+
+
+
+def GetVideoUrl(link):
+  url = "%s/?__a=1" % link
+  logging.info("fetching: %r", url)
+  result = urlfetch.fetch(url)
+  payload = json.loads(result.content)
+
+  return payload.get("graphql", {}).get("shortcode_media", {}).get("video_url")
