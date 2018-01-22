@@ -17,6 +17,9 @@ class RssFeed(webapp.RequestHandler):
   """Make RSS Feed for a (public) instagram user."""
 
   def get(self, user):
+    url = "https://websta.me/rss/n/%s" % user
+    self.redirect(url)
+    return
 
     url = "https://www.instagram.com/%s/media/" % user
     logging.info("fetching: %r", url)
