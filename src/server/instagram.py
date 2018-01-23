@@ -10,6 +10,7 @@ import re
 
 import PyRSS2Gen as rss
 
+from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 from google.appengine.ext import webapp
 
@@ -62,17 +63,18 @@ class RssFeed(webapp.RequestHandler):
       #  '',
       #  item["thumbnail_resources"][-1]["src"]
       #  )
-      img_src = item["thumbnail_resources"][-1]["src"]
+      img_src = item["display_src"]
 
       link = "https://instagram.com/p/%s" % item["code"]
 
-      media = """<a href="%s"><img src="%s"></a>""" % (link, img_src)
+      width_and_height = """width="%(width)s" height="%(height)s" """ % item["dimensions"]
+
+      media = """<a href="%s"><img %s src="%s"></a>""" % (link, width_and_height, img_src)
       if item.get("is_video"):
-        media = """<video width="%s" height="%s" controls="controls">
+        media = """<video %s controls="controls">
                     <source src="%s" type="video/mp4" poster="%s" />
                   </video><br>%s<br>""" % (
-                    item["dimensions"]["height"],
-                    item["dimensions"]["width"],
+                    width_and_height,
                     GetVideoUrl(link),
                     img_src,
                     media
@@ -95,12 +97,17 @@ class RssFeed(webapp.RequestHandler):
     self.response.headers['Content-Type'] = 'text/xml'
     f.write_xml(self.response.out)
 
-
-
 def GetVideoUrl(link):
+  key = "GetVideoUrl:" + link
+  ans = memcache.get(key)
+  if ans is not None:
+    return ans
+
   url = "%s/?__a=1" % link
   logging.info("fetching: %r", url)
   result = urlfetch.fetch(url)
   payload = json.loads(result.content)
 
-  return payload.get("graphql", {}).get("shortcode_media", {}).get("video_url")
+  ans = payload.get("graphql", {}).get("shortcode_media", {}).get("video_url")
+  memcache.set(key, ans)
+  return ans
