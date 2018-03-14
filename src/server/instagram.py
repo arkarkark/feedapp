@@ -18,10 +18,6 @@ class RssFeed(webapp.RequestHandler):
   """Make RSS Feed for a (public) instagram user."""
 
   def get(self, user):
-    #  url = "https://websta.me/rss/n/%s" % user
-    #  self.redirect(url)
-    #  return
-
     url = "https://www.instagram.com/%s/?__a=1" % user
     logging.info("fetching: %r", url)
     result = urlfetch.fetch(url)
@@ -30,25 +26,27 @@ class RssFeed(webapp.RequestHandler):
 
     payload = json.loads(result.content)
 
-    user = payload.get("user")
-    if not user:
-      logging.info("no user in payload")
-      return self.error(404)
+    def find(haystack, *needles):
+      result = None
+      for needle in needles:
+        result = haystack.get(needle)
+        if not result:
+          logging.info("no %r in payload %r", needle, haystack)
+          self.error(404)
+        haystack = result
+      return result
 
-    media = user.get("media")
-    if not media:
-      logging.info("no media in user")
-      return self.error(404)
-
-    nodes = media.get("nodes")
-
-    if not nodes:
-      logging.info("no nodes in media in user")
-      return self.error(404)
+    graphql = find(payload, "graphql")
+    user = find(graphql, "user")
+    if not user: return
+    edges = find(user, "edge_owner_to_timeline_media", "edges")
+    if not edges: return
 
     f = None
 
-    for item in nodes:
+    for item in edges:
+      item = find(item, "node")
+      if not item: continue
       if f is None:
         title = "%s (@%s)" % (user["full_name"], user["username"])
         f = rss.RSS2(
@@ -63,9 +61,9 @@ class RssFeed(webapp.RequestHandler):
       #  '',
       #  item["thumbnail_resources"][-1]["src"]
       #  )
-      img_src = item["display_src"]
+      img_src = item["display_url"]
 
-      link = "https://instagram.com/p/%s" % item["code"]
+      link = "https://instagram.com/p/%s" % item["shortcode"]
 
       width_and_height = """width="%(width)s" height="%(height)s" """ % item["dimensions"]
 
@@ -80,14 +78,16 @@ class RssFeed(webapp.RequestHandler):
                     media
                   )
 
-      body = """%s<br>%s""" % (media, cgi.escape(item.get("caption")))
+      caption = find(find(item, "edge_media_to_caption", "edges")[0], "node", "text")
+
+      body = """%s<br>%s""" % (media, cgi.escape(caption))
 
       rss_item = {
         "title": title,
         "link": link,
         "description": body,
         "guid": rss.Guid(item["id"], False),
-        "pubDate": datetime.datetime.fromtimestamp(int(item["date"])),
+        "pubDate": datetime.datetime.fromtimestamp(int(item["taken_at_timestamp"])),
       }
       #  if item.get("is_video"):
       #  rss_item["enclosure"] = rss.Enclosure(item["videos"]["standard_resolution"]["url"], 10, "video/mp4")
