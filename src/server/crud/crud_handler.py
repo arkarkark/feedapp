@@ -272,7 +272,9 @@ class CrudHandler(webapp2.RequestHandler):
           return
         ans = self._GetJsonDict(all_models)
       else:
-        all_models = [x for x in all_models
+        if hasattr(self.model, "created"):
+          all_models = all_models.order(-self.model.created)
+        all_models = [x for x in all_models.fetch(50)
                       if self.IsAuthorized(crud_model.Actions.QUERY, user, x)]
         ans = [self._GetJsonDict(ex) for ex in all_models]
     else:

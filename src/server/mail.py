@@ -175,7 +175,7 @@ class SetupDemo(webapp.RequestHandler):
 
 
 class MailItemDataHandler(crud_handler.GetCrudHandler(MailFeedItem)):
-  def postObject(self, item, js):
+  def postEntity(self, item, js):
     if self.request.get('action') == 'tombstone':
       item.body = item.subject = "This post is no longer available."
       item.put()
