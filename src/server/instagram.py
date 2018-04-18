@@ -17,7 +17,11 @@ from google.appengine.ext import webapp
 def find(haystack, *needles):
   result = None
   for needle in needles:
-    result = haystack.get(needle)
+    try:
+      result = haystack.get(needle)
+    except AttributeError as ae:
+      raise ValueError("error: %r no %r in payload %r" %(ae, needle, haystack))
+
     if not result:
       raise ValueError("no %r in payload %r" %(needle, haystack))
     haystack = result
@@ -26,23 +30,31 @@ def find(haystack, *needles):
 class RssFeed(webapp.RequestHandler):
   """Make RSS Feed for a (public) instagram user."""
 
-  def getInstaGraphQl(self, igid):
-    url = "https://www.instagram.com/%s/?__a=1" % igid
-    logging.info("fetching: %r", url)
+  def getInstaGraphQl(self, igid, page_type):
+    url = "https://www.instagram.com/%s" % igid
+    # this is from: https://stackoverflow.com/a/49815744
     result = urlfetch.fetch(url)
     if result.status_code != 200:
       logging.info("Error %r", result.status_code)
       return self.error(result.status_code)
 
-    logging.info("getInstaGraphQl %r %r\n%s", igid, result.status_code, str(result.content)[0:50])
+    payload = None
 
-    payload = json.loads(result.content)
+    insta_html = result.content
+    insta_html_split = insta_html.split('<script type="text/javascript">window._sharedData = ')
+    if len(insta_html_split) > 1:
+      insta_html_split_2 = insta_html_split[1].split(';</script>')
+      if len(insta_html_split_2) > 1:
+        payload = json.loads(insta_html_split_2[0])
 
-    graphql = find(payload, "graphql")
+    logging.info("DONE!\n%s", json.dumps(payload, sort_keys=True, indent=2, separators=(',', ': ')))
+
+    profile_page = find(payload, "entry_data", page_type)
+    graphql = find(profile_page[0], "graphql")
     return graphql
 
   def get(self, user):
-    graphql = self.getInstaGraphQl(user)
+    graphql = self.getInstaGraphQl(user, "ProfilePage")
     user = find(graphql, "user")
     if not user: return
     edges = find(user, "edge_owner_to_timeline_media", "edges")
@@ -69,7 +81,7 @@ class RssFeed(webapp.RequestHandler):
 
       if item["__typename"] == "GraphSidecar":
         logging.info("getting sidecar for %r", item["shortcode"])
-        body = self.GetSidecarBody(self.getInstaGraphQl("p/%s" % item["shortcode"]))
+        body = self.GetSidecarBody(self.getInstaGraphQl("p/%s" % item["shortcode"], "PostPage"))
       else:
         body = self.GetBody(item)
 
@@ -100,12 +112,13 @@ class RssFeed(webapp.RequestHandler):
     if ans:
       return ans
     shortcode = item["shortcode"]
+    # return "VIDEO URL p/%s" % shortcode
     key = "GetVideoUrl:" + shortcode
     ans = memcache.get(key)
     if ans is not None:
       return ans
 
-    graphql = self.getInstaGraphQl("p/%s" % shortcode)
+    graphql = self.getInstaGraphQl("p/%s" % shortcode, "PostPage")
 
     ans = graphql.get("shortcode_media", {}).get("video_url")
     memcache.set(key, ans)
