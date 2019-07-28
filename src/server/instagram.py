@@ -6,7 +6,6 @@ import cgi
 import datetime
 import json
 import logging
-import re
 
 import PyRSS2Gen as rss
 
@@ -15,6 +14,8 @@ from google.appengine.api import urlfetch
 from google.appengine.ext import webapp
 
 import gae_memcache_decorator
+
+urlfetch.set_default_fetch_deadline(55)
 
 def find(haystack, *needles):
   result = None
@@ -35,6 +36,7 @@ class RssFeed(webapp.RequestHandler):
   def __repr__(self):
     return "instagram.RssFeed"
 
+  @gae_memcache_decorator.cached(time=60*60)
   def getInstaGraphQl(self, igid, page_type):
     url = "https://www.instagram.com/%s" % igid
     # this is from: https://stackoverflow.com/a/49815744
