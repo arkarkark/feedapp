@@ -173,6 +173,29 @@ class SetupDemo(webapp.RequestHandler):
     self.response.out.write('<p><button onClick="history.back()">' +
                             'DONE</button></p>')
 
+class BulkDeleteMailItems(webapp.RequestHandler):
+  """Blow away old feed items."""
+
+  def get(self):
+    logging.info('BulkDeleteMailItems')
+    if not users.is_current_user_admin():
+      self.error(401)
+      return
+
+    logging.info('Passed Auth')
+
+    # olderthan = datetime.datetime(2018,1,1)
+    olderthan = datetime.datetime.now() - datetime.timedelta(days=180)
+
+    q = MailFeedItem.query().filter(MailFeedItem.created < olderthan)
+    items = q.fetch(5000, keys_only=True)
+    self.response.out.write('<p>%d items</p>' % len(items))
+
+    ndb.delete_multi(items)
+
+    self.response.out.write('<p><button onClick="history.back()">' +
+                            'DONE</button></p>')
+
 
 class MailItemDataHandler(crud_handler.GetCrudHandler(MailFeedItem)):
   def postEntity(self, item, js):

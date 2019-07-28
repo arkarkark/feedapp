@@ -37,6 +37,7 @@ app = webapp.WSGIApplication([
   ('/data/mail/feed.json', crud_handler.GetCrudHandler(mail.MailFeed)),
   ('/data/mail/item.json', mail.MailItemDataHandler),
   ('/data/user/user.json', wtwfhandler.UserHandler),
+  ('/data/bulkdeletemailitems', mail.BulkDeleteMailItems),
   ('/data/setupdemo', mail.SetupDemo),
   (r'/_ah/mail/(.+)', mail.EmailToFeed),
   (auth.decorator.callback_path, auth.decorator.callback_handler())
