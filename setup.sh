@@ -2,6 +2,7 @@
 
 cd $(dirname $0)
 # see https://stackoverflow.com/questions/24257803/must-supply-either-home-or-prefix-exec-prefix-not-both
+[ -e setup.cfg ] && echo "Can't run setup with existing setup.cfg" && exit 10
 (echo "[install]"; echo "prefix=") > setup.cfg
 
 [ ! -d dist/lib 		] && mkdir -p dist/lib
