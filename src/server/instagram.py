@@ -60,14 +60,20 @@ class RssFeed(webapp.RequestHandler):
     graphql = find(profile_page[0], "graphql")
     return graphql
 
-  @gae_memcache_decorator.cached(time=60*60*12)
   def get(self, user):
+    rssxml = self.getResponseXml(user)
+    if rssxml:
+      self.response.headers['Content-Type'] = 'text/xml'
+      self.response.out.write(rssxml)
+
+  @gae_memcache_decorator.cached(time=60*60*12)
+  def getResponseXml(self, user):
+
     graphql = self.getInstaGraphQl(user, "ProfilePage")
     user = find(graphql, "user")
     if not user: return
     edges = find(user, "edge_owner_to_timeline_media", "edges")
     if not edges: return
-
 
     f = None
 
@@ -112,8 +118,7 @@ class RssFeed(webapp.RequestHandler):
 
       f.items.append(rss.RSSItem(**rss_item))
 
-    self.response.headers['Content-Type'] = 'text/xml'
-    f.write_xml(self.response.out)
+    return f.to_xml()
 
   def GetVideoUrl(self, item):
     ans = item.get("video_url")
