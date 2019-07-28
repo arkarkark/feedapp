@@ -8,8 +8,11 @@ cd $(dirname $0)
 [ ! -e dist/lib/googleapiclient ] && pip install -t dist/lib google-api-python-client
 [ ! -e dist/lib/pytz 		] && pip install -t dist/lib pytz
 [ ! -e dist/lib/requests	] && pip install -t dist/lib requests
-if [ ! -e dist/lib/oauth2client	]; then
-  pip install -t dist/lib oauth2client
+[ ! -e dist/lib/oauth2client ] && pip install -t dist/lib oauth2client
+
+if [ ! -e dist/lib/gae_memcache_decorator.py ]; then
+  curl -o dist/lib/gae_memcache_decorator.py \
+       https://gist.githubusercontent.com/abahgat/1395810/raw/6f481fbe22ae92c68e53128be9533ec2633a4653/gae-memcache-decorator.py
 fi
 
 if [ ! -e dist/lib/googlemaps ]; then

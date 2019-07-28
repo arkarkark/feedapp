@@ -14,6 +14,8 @@ from google.appengine.api import memcache
 from google.appengine.api import urlfetch
 from google.appengine.ext import webapp
 
+import gae_memcache_decorator
+
 def find(haystack, *needles):
   result = None
   for needle in needles:
@@ -53,6 +55,7 @@ class RssFeed(webapp.RequestHandler):
     graphql = find(profile_page[0], "graphql")
     return graphql
 
+  @gae_memcache_decorator.cached(time=60*60*12)
   def get(self, user):
     graphql = self.getInstaGraphQl(user, "ProfilePage")
     user = find(graphql, "user")
