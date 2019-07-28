@@ -60,10 +60,6 @@ class RssFeed(webapp.RequestHandler):
 
   @gae_memcache_decorator.cached(time=60*60*12)
   def get(self, user):
-    """hello"""
-    self.response.out.write("<plaintext>%s\n" % str(self.get))
-    return
-
     graphql = self.getInstaGraphQl(user, "ProfilePage")
     user = find(graphql, "user")
     if not user: return
