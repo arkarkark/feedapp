@@ -32,6 +32,9 @@ def find(haystack, *needles):
 class RssFeed(webapp.RequestHandler):
   """Make RSS Feed for a (public) instagram user."""
 
+  def __repr__(self):
+    return "instagram.RssFeed"
+
   def getInstaGraphQl(self, igid, page_type):
     url = "https://www.instagram.com/%s" % igid
     # this is from: https://stackoverflow.com/a/49815744
@@ -57,6 +60,10 @@ class RssFeed(webapp.RequestHandler):
 
   @gae_memcache_decorator.cached(time=60*60*12)
   def get(self, user):
+    """hello"""
+    self.response.out.write("<plaintext>%s\n" % str(self.get))
+    return
+
     graphql = self.getInstaGraphQl(user, "ProfilePage")
     user = find(graphql, "user")
     if not user: return
