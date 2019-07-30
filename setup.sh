@@ -45,7 +45,7 @@ else
   npm install
 fi
 
-./node_modules/.bin/gulp
+./node_modules/.bin/webpack
 
 if [ "$(python -c 'import PIL; print PIL.PILLOW_VERSION')" != "2.9.0" ]; then
   echo "WARNING: PIL(low) might be the wrong version: \`sudo pip install Pillow==2.9\`"

@@ -1,1 +1,12 @@
+require "angular"
+require "angular-animate"
+require "angular-aria"
+require "angular-material"
+require "angular-material/angular-material.css"
+require "angular-messages"
+require "angular-resource"
+require "angular-route"
+require "angular-sanitize"
+require "font-awesome-sass-loader"
+
 window._ = require "underscore"

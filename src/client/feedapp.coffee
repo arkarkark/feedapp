@@ -1,3 +1,4 @@
+require "./vendor"
 require "./index.slim"
 require "./index.scss"
 require "./rss.png"
